@@ -1,0 +1,2540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一页读懂洛克王国</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6d86;
+      --paper: #fffdf7;
+      --cream: #f7f0df;
+      --blue: #225ec8;
+      --sky: #73c7ef;
+      --violet: #7f58c9;
+      --gold: #e1ad32;
+      --green: #2ca86f;
+      --rose: #dd6579;
+      --line: rgba(23, 32, 51, 0.14);
+      --shadow: 0 22px 60px rgba(21, 39, 79, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(115, 199, 239, 0.22), transparent 28%),
+        radial-gradient(circle at 92% 18%, rgba(225, 173, 50, 0.18), transparent 24%),
+        linear-gradient(180deg, #eef7ff 0%, #fff9ec 42%, #f4fbf7 100%);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.54);
+      background: rgba(255, 253, 247, 0.86);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(1160px, calc(100% - 32px));
+      min-height: 64px;
+      margin: 0 auto;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      color: #fff;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      box-shadow: 0 10px 24px rgba(34, 94, 200, 0.24);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-link {
+      padding: 8px 11px;
+      color: var(--muted);
+      border-radius: 999px;
+      font-size: 14px;
+      white-space: nowrap;
+      transition: 0.2s ease;
+    }
+
+    .nav-link.active,
+    .nav-link:hover {
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .section {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 84px 0;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      align-items: center;
+      gap: 34px;
+      min-height: calc(100vh - 64px);
+      padding-top: 38px;
+      padding-bottom: 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 12px;
+      color: #774e09;
+      border: 1px solid rgba(225, 173, 50, 0.48);
+      border-radius: 999px;
+      background: rgba(255, 246, 218, 0.84);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 680px;
+      margin-bottom: 18px;
+      font-size: clamp(44px, 7vw, 84px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      color: #3b4861;
+      font-size: 19px;
+      line-height: 1.85;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: var(--blue);
+      box-shadow: 0 16px 34px rgba(34, 94, 200, 0.24);
+    }
+
+    .btn.secondary {
+      color: var(--blue);
+      border-color: rgba(34, 94, 200, 0.2);
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .hero-art {
+      position: relative;
+      min-height: 530px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(34, 94, 200, 0.08), transparent 42%),
+        linear-gradient(135deg, #dff3ff, #fff6dc 60%, #eaf8ee);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.74);
+    }
+
+    .sun {
+      position: absolute;
+      top: 46px;
+      right: 54px;
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: #ffd76a;
+      box-shadow: 0 0 0 16px rgba(255, 215, 106, 0.16);
+    }
+
+    .castle {
+      position: absolute;
+      left: 50%;
+      bottom: 92px;
+      width: 320px;
+      height: 270px;
+      transform: translateX(-50%);
+    }
+
+    .tower {
+      position: absolute;
+      bottom: 0;
+      width: 78px;
+      height: 196px;
+      border: 4px solid #243756;
+      border-bottom: 0;
+      border-radius: 12px 12px 0 0;
+      background: linear-gradient(180deg, #ffffff, #cfeaff);
+    }
+
+    .tower.left {
+      left: 16px;
+    }
+
+    .tower.right {
+      right: 16px;
+    }
+
+    .tower.mid {
+      left: 50%;
+      width: 112px;
+      height: 238px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #fff9e8, #dbeefe);
+    }
+
+    .roof {
+      position: absolute;
+      left: 50%;
+      top: -54px;
+      width: 0;
+      height: 0;
+      border-right: 42px solid transparent;
+      border-bottom: 58px solid var(--violet);
+      border-left: 42px solid transparent;
+      transform: translateX(-50%);
+    }
+
+    .tower.mid .roof {
+      top: -70px;
+      border-right-width: 58px;
+      border-bottom-width: 74px;
+      border-left-width: 58px;
+    }
+
+    .door {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 42px;
+      height: 70px;
+      border-radius: 24px 24px 0 0;
+      background: #243756;
+      transform: translateX(-50%);
+    }
+
+    .window {
+      position: absolute;
+      left: 50%;
+      top: 58px;
+      width: 24px;
+      height: 34px;
+      border-radius: 14px 14px 4px 4px;
+      background: #ffd76a;
+      transform: translateX(-50%);
+      box-shadow: 0 52px 0 #ffd76a;
+    }
+
+    .hills {
+      position: absolute;
+      right: -44px;
+      bottom: -60px;
+      left: -44px;
+      height: 180px;
+      background:
+        radial-gradient(ellipse at 22% 52%, #75bf73 0 34%, transparent 35%),
+        radial-gradient(ellipse at 58% 52%, #4fae7d 0 42%, transparent 43%),
+        radial-gradient(ellipse at 86% 58%, #83c969 0 38%, transparent 39%);
+    }
+
+    .pet {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 88px;
+      height: 88px;
+      color: #243756;
+      border: 3px solid #243756;
+      border-radius: 22px 22px 28px 28px;
+      background: #fff;
+      font-size: 42px;
+      box-shadow: 0 16px 0 rgba(36, 55, 86, 0.1);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .pet.one {
+      left: 52px;
+      bottom: 118px;
+      background: #fff2c8;
+    }
+
+    .pet.two {
+      right: 48px;
+      bottom: 150px;
+      background: #dff6ff;
+      animation-delay: -1.3s;
+    }
+
+    .pet.three {
+      left: 96px;
+      top: 104px;
+      width: 66px;
+      height: 66px;
+      font-size: 30px;
+      background: #eff1ff;
+      animation-delay: -2.4s;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .section-kicker {
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      max-width: 760px;
+      margin-bottom: 0;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    .section-intro {
+      max-width: 390px;
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .intro-panel {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .big-card,
+    .info-card,
+    .battle-panel,
+    .quiz-panel {
+      border: 1px solid rgba(23, 32, 51, 0.12);
+      border-radius: 12px;
+      background: rgba(255, 253, 247, 0.78);
+      box-shadow: 0 18px 42px rgba(21, 39, 79, 0.12);
+    }
+
+    .big-card {
+      padding: 34px;
+    }
+
+    .big-card p {
+      color: #3d4a62;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 24px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .note-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+      padding: 28px;
+      color: #fff;
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, rgba(23, 32, 51, 0.12), transparent),
+        linear-gradient(145deg, #225ec8, #7f58c9);
+      box-shadow: var(--shadow);
+    }
+
+    .note-card p {
+      color: rgba(255, 255, 255, 0.86);
+      line-height: 1.85;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      perspective: 1000px;
+    }
+
+    .flip-card {
+      position: relative;
+      min-height: 238px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      cursor: pointer;
+      perspective: 1000px;
+    }
+
+    .flip-inner {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      transform-style: preserve-3d;
+      transition: transform 0.55s ease;
+    }
+
+    .flip-card:hover .flip-inner,
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fffdf7;
+      box-shadow: 0 14px 34px rgba(21, 39, 79, 0.1);
+      backface-visibility: hidden;
+    }
+
+    .flip-back {
+      color: #fff;
+      background: linear-gradient(145deg, #172033, #225ec8);
+      transform: rotateY(180deg);
+    }
+
+    .feature-icon {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border-radius: 8px;
+      background: #eef7ff;
+      font-size: 25px;
+    }
+
+    .flip-face h3 {
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .flip-face p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .flip-back p {
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .map-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .map-board {
+      position: relative;
+      min-height: 520px;
+      border: 1px solid rgba(23, 32, 51, 0.12);
+      border-radius: 14px;
+      background:
+        linear-gradient(90deg, rgba(34, 94, 200, 0.05) 1px, transparent 1px),
+        linear-gradient(rgba(34, 94, 200, 0.05) 1px, transparent 1px),
+        linear-gradient(135deg, #e8f7ff, #fff8e8 62%, #e8f7ec);
+      background-size: 42px 42px, 42px 42px, auto;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .path {
+      position: absolute;
+      inset: 72px 76px;
+      border: 4px dashed rgba(126, 89, 41, 0.3);
+      border-radius: 48% 52% 44% 56%;
+      transform: rotate(-8deg);
+    }
+
+    .place {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 178px;
+      padding: 10px 12px;
+      border: 2px solid rgba(23, 32, 51, 0.22);
+      border-radius: 10px;
+      background: rgba(255, 253, 247, 0.92);
+      box-shadow: 0 12px 26px rgba(21, 39, 79, 0.12);
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .place:hover,
+    .place.active {
+      color: #fff;
+      border-color: transparent;
+      background: var(--blue);
+      transform: translateY(-4px);
+    }
+
+    .place span {
+      font-weight: 900;
+    }
+
+    .place small {
+      display: block;
+      color: inherit;
+      opacity: 0.72;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .p1 {
+      top: 52px;
+      left: 54px;
+    }
+
+    .p2 {
+      top: 76px;
+      right: 72px;
+    }
+
+    .p3 {
+      left: 42%;
+      top: 228px;
+      transform: translateX(-50%);
+    }
+
+    .p3:hover,
+    .p3.active {
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .p4 {
+      right: 56px;
+      bottom: 86px;
+    }
+
+    .p5 {
+      left: 70px;
+      bottom: 70px;
+    }
+
+    .map-info {
+      padding: 28px;
+    }
+
+    .map-info h3 {
+      margin-bottom: 12px;
+      font-size: 30px;
+    }
+
+    .map-info p {
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      color: #21406e;
+      border-radius: 999px;
+      background: #eaf3ff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .pet-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .evolution-card {
+      padding: 28px;
+      text-align: center;
+    }
+
+    .pet-avatar {
+      display: grid;
+      width: min(260px, 88%);
+      aspect-ratio: 1;
+      place-items: center;
+      margin: 0 auto 18px;
+      border: 5px solid #243756;
+      border-radius: 34px;
+      background: linear-gradient(145deg, #fff8d9, #dff3ff);
+      box-shadow: inset 0 -18px 0 rgba(34, 94, 200, 0.06), 0 18px 40px rgba(21, 39, 79, 0.14);
+      font-size: 96px;
+      transition: 0.25s ease;
+    }
+
+    .evolution-card h3 {
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn,
+    .element-btn,
+    .memory-btn,
+    .quiz-btn {
+      padding: 10px 13px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.18s ease;
+    }
+
+    .tab-btn.active,
+    .element-btn.active,
+    .memory-btn.active,
+    .quiz-btn.active,
+    .tab-btn:hover,
+    .element-btn:hover,
+    .memory-btn:hover,
+    .quiz-btn:hover {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .detail-box {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .detail-box p {
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
+    .trait-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .trait {
+      padding: 16px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .trait b {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .trait span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .element-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+    }
+
+    .element-panel {
+      padding: 28px;
+    }
+
+    .element-result {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .result-card {
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .result-card span {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .battle-panel {
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(255, 253, 247, 0.8), rgba(234, 247, 255, 0.82));
+    }
+
+    .battle-stage {
+      display: grid;
+      grid-template-columns: 1fr 78px 1fr;
+      align-items: center;
+      gap: 12px;
+      min-height: 210px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .fighter {
+      text-align: center;
+    }
+
+    .fighter-icon {
+      display: grid;
+      width: 92px;
+      height: 92px;
+      place-items: center;
+      margin: 0 auto 12px;
+      border: 3px solid #243756;
+      border-radius: 22px;
+      background: #fff6d8;
+      font-size: 44px;
+      transition: transform 0.18s ease;
+    }
+
+    .fighter.enemy .fighter-icon {
+      background: #e6f3ff;
+    }
+
+    .hp {
+      height: 10px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: rgba(23, 32, 51, 0.12);
+      overflow: hidden;
+    }
+
+    .hp-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+      transition: width 0.24s ease;
+    }
+
+    .vs {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      margin: 0 auto;
+      color: #fff;
+      border-radius: 50%;
+      background: var(--rose);
+      font-weight: 900;
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .skill-btn {
+      min-height: 48px;
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      background: var(--blue);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .skill-btn:nth-child(2) {
+      background: var(--violet);
+    }
+
+    .skill-btn:nth-child(3) {
+      background: var(--green);
+    }
+
+    .skill-btn:nth-child(4) {
+      color: #453008;
+      background: var(--gold);
+    }
+
+    .battle-log {
+      min-height: 58px;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: #172033;
+      color: #fff;
+      line-height: 1.7;
+    }
+
+    .memory-zone {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .memory-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .memory-card {
+      min-height: 228px;
+      padding: 30px;
+      color: #fff;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #172033, #225ec8);
+      box-shadow: var(--shadow);
+    }
+
+    .memory-card h3 {
+      margin-bottom: 14px;
+      font-size: 30px;
+    }
+
+    .memory-card p {
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 18px;
+      line-height: 1.85;
+    }
+
+    .quiz-panel {
+      padding: 34px;
+      text-align: center;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 24px 0 20px;
+    }
+
+    .quiz-result {
+      min-height: 110px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      text-align: left;
+    }
+
+    .quiz-result h3 {
+      margin-bottom: 8px;
+      color: var(--blue);
+    }
+
+    .quiz-result p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .final-line {
+      padding: 42px;
+      color: #fff;
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(225, 173, 50, 0.18), transparent),
+        linear-gradient(145deg, #172033, #225ec8 58%, #2ca86f);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .final-line h2 {
+      max-width: 860px;
+      margin: 0 auto 16px;
+    }
+
+    .final-line p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 18px;
+      line-height: 1.85;
+    }
+
+    @media (max-width: 940px) {
+      .hero,
+      .intro-panel,
+      .map-layout,
+      .pet-layout,
+      .element-layout,
+      .memory-zone {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-art {
+        min-height: 430px;
+      }
+
+      .feature-grid,
+      .quiz-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-intro {
+        margin-top: 14px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav {
+        width: calc(100% - 20px);
+      }
+
+      .brand span:last-child {
+        display: none;
+      }
+
+      .section {
+        width: calc(100% - 24px);
+        padding: 58px 0;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .hero-copy,
+      .big-card p,
+      .memory-card p,
+      .final-line p {
+        font-size: 16px;
+      }
+
+      .hero-art {
+        min-height: 360px;
+      }
+
+      .castle {
+        width: 260px;
+        bottom: 72px;
+        transform: translateX(-50%) scale(0.82);
+      }
+
+      .pet.one {
+        left: 22px;
+      }
+
+      .pet.two {
+        right: 22px;
+      }
+
+      .feature-grid,
+      .stat-grid,
+      .trait-list,
+      .element-result,
+      .skills,
+      .quiz-options {
+        grid-template-columns: 1fr;
+      }
+
+      .map-board {
+        min-height: 620px;
+      }
+
+      .place {
+        max-width: 160px;
+      }
+
+      .p1 {
+        left: 18px;
+      }
+
+      .p2 {
+        right: 16px;
+      }
+
+      .p3 {
+        left: 50%;
+        top: 252px;
+      }
+
+      .p4 {
+        right: 18px;
+        bottom: 120px;
+      }
+
+      .p5 {
+        left: 18px;
+        bottom: 72px;
+      }
+
+      .battle-stage {
+        grid-template-columns: 1fr;
+      }
+
+      .vs {
+        width: 48px;
+        height: 48px;
+      }
+    }
+    :root {
+      --ink: #26314f;
+      --muted: #667293;
+      --paper: #fffaf0;
+      --cream: #fff0c7;
+      --game-blue: #2f80ed;
+      --game-sky: #84d8ff;
+      --game-violet: #8e6be8;
+      --game-gold: #ffc94a;
+      --game-orange: #ff9f2e;
+      --game-green: #49bf7a;
+      --game-rose: #ff6f91;
+      --outline: #26314f;
+      --line: rgba(38, 49, 79, 0.18);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --shadow-pop: 0 8px 0 rgba(38, 49, 79, 0.16), 0 18px 34px rgba(55, 78, 137, 0.18);
+      --shadow-card: 0 10px 0 rgba(38, 49, 79, 0.10), 0 22px 42px rgba(55, 78, 137, 0.14);
+      --font-body: "Trebuchet MS", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      --font-display: "Comic Sans MS", "Trebuchet MS", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-weight: 600;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(132, 216, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 92% 18%, rgba(255, 201, 74, 0.22), transparent 24%),
+        linear-gradient(180deg, #eef7ff 0%, #fff7df 42%, #eefbf4 100%);
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand,
+    .section-kicker,
+    .btn,
+    .nav-link,
+    .badge,
+    .chip,
+    .place,
+    .tab-btn,
+    .element-btn,
+    .memory-btn,
+    .quiz-btn,
+    .skill-btn,
+    .build-skill {
+      font-family: var(--font-display);
+    }
+
+    h1 {
+      color: #2d3b68;
+      font-weight: 900;
+      text-shadow:
+        0 4px 0 #fff4c2,
+        0 8px 0 rgba(38, 49, 79, 0.14);
+    }
+
+    h2 {
+      color: #2d3b68;
+      font-weight: 900;
+      text-shadow: 0 3px 0 rgba(255, 244, 194, 0.9);
+    }
+
+    h3 {
+      color: #2d3b68;
+      font-weight: 900;
+    }
+
+    .icon-defs {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .game-icon {
+      display: inline-block;
+      flex: 0 0 auto;
+      width: 1.25em;
+      height: 1.25em;
+      color: currentColor;
+      vertical-align: -0.18em;
+    }
+
+    .icon-sm {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-md {
+      width: 28px;
+      height: 28px;
+    }
+
+    .icon-lg {
+      width: 52px;
+      height: 52px;
+    }
+
+    .icon-xl {
+      width: 142px;
+      height: 142px;
+    }
+
+    .brand-mark {
+      border: 2px solid var(--outline);
+      border-radius: 12px;
+      background: linear-gradient(180deg, #69bbff, var(--game-blue));
+      box-shadow: 0 5px 0 rgba(38, 49, 79, 0.18), 0 12px 24px rgba(34, 94, 200, 0.24);
+    }
+
+    .brand-mark .game-icon {
+      width: 23px;
+      height: 23px;
+    }
+
+    .section-kicker,
+    .eyebrow,
+    .badge,
+    .chip {
+      border: 2px solid rgba(38, 49, 79, 0.18);
+      border-radius: 999px;
+      font-weight: 900;
+      box-shadow: 0 4px 0 rgba(38, 49, 79, 0.10);
+    }
+
+    .section-kicker,
+    .eyebrow {
+      color: #744700;
+      background: linear-gradient(180deg, #fff9db, #ffd96d);
+    }
+
+    .nav-link.active,
+    .nav-link:hover {
+      background: linear-gradient(180deg, #62b6ff, var(--game-blue));
+      box-shadow: 0 4px 0 rgba(38, 49, 79, 0.14);
+    }
+
+    .btn,
+    .tab-btn,
+    .element-btn,
+    .memory-btn,
+    .quiz-btn,
+    .skill-btn,
+    .build-skill {
+      border: 2px solid var(--outline);
+      border-radius: var(--radius-sm);
+      font-weight: 900;
+      box-shadow: 0 5px 0 rgba(38, 49, 79, 0.22);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    }
+
+    .btn:hover,
+    .tab-btn:hover,
+    .element-btn:hover,
+    .memory-btn:hover,
+    .quiz-btn:hover,
+    .skill-btn:hover,
+    .build-skill:hover {
+      transform: translateY(-3px);
+      filter: saturate(1.08);
+      box-shadow: 0 8px 0 rgba(38, 49, 79, 0.18), 0 16px 24px rgba(55, 78, 137, 0.16);
+    }
+
+    .btn:active,
+    .tab-btn:active,
+    .element-btn:active,
+    .memory-btn:active,
+    .quiz-btn:active,
+    .skill-btn:active,
+    .build-skill:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(38, 49, 79, 0.22);
+    }
+
+    .btn.primary,
+    .skill-btn {
+      color: #fff;
+      background: linear-gradient(180deg, #5aa9ff, var(--game-blue));
+    }
+
+    .btn.secondary {
+      color: #26314f;
+      background: linear-gradient(180deg, #fff9dc, var(--game-gold));
+    }
+
+    .tab-btn,
+    .element-btn,
+    .memory-btn,
+    .quiz-btn,
+    .build-skill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #26314f;
+      background: linear-gradient(180deg, #ffffff, #fff0c7);
+    }
+
+    .tab-btn.active,
+    .element-btn.active,
+    .memory-btn.active,
+    .quiz-btn.active,
+    .build-skill.active {
+      color: #fff;
+      border-color: var(--outline);
+      background: linear-gradient(180deg, #9f86ff, var(--game-violet));
+    }
+
+    .big-card,
+    .info-card,
+    .battle-panel,
+    .quiz-panel,
+    .flip-face,
+    .result-card,
+    .trait,
+    .detail-box,
+    .map-event,
+    .build-lab,
+    .build-summary,
+    .battle-challenge {
+      border: 2px solid rgba(38, 49, 79, 0.16);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 250, 240, 0.92)),
+        radial-gradient(circle at 16% 12%, rgba(255, 201, 74, 0.18), transparent 32%);
+      box-shadow: var(--shadow-card);
+    }
+
+    .note-card,
+    .memory-card {
+      border: 2px solid rgba(38, 49, 79, 0.18);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.24), transparent 28%),
+        linear-gradient(145deg, #4d8dff, #8e6be8 58%, #ff7fab);
+      box-shadow: var(--shadow-pop);
+    }
+
+    .flip-back {
+      background: linear-gradient(145deg, #26314f, #2f80ed);
+    }
+
+    .feature-icon,
+    .pet-avatar,
+    .fighter-icon {
+      border: 3px solid var(--outline);
+      border-radius: 24px;
+      background: linear-gradient(145deg, #fff7bd, #ccefff);
+      box-shadow:
+        inset 0 -10px 0 rgba(38, 49, 79, 0.08),
+        0 7px 0 rgba(38, 49, 79, 0.16);
+      font-size: initial;
+    }
+
+    .pet .game-icon {
+      width: 62px;
+      height: 62px;
+    }
+
+    .pet.three .game-icon {
+      width: 46px;
+      height: 46px;
+    }
+
+    .place {
+      border: 2px solid var(--outline);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fffdf2, #ffe9a8);
+      box-shadow: 0 6px 0 rgba(38, 49, 79, 0.18);
+    }
+
+    .place:hover,
+    .place.active {
+      color: #fff;
+      background: linear-gradient(180deg, #62b6ff, var(--game-blue));
+      transform: translateY(-5px);
+    }
+
+    .p3:hover,
+    .p3.active {
+      transform: translateX(-50%) translateY(-5px);
+    }
+
+    .place .game-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .fighter-icon .game-icon {
+      width: 62px;
+      height: 62px;
+    }
+
+    .battle-log {
+      border: 2px solid var(--outline);
+      border-radius: 14px;
+      background: #26314f;
+      color: #fff7c8;
+      font-family: var(--font-display);
+      font-weight: 800;
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+    }
+
+    .vs {
+      border: 3px solid #fff;
+      background: linear-gradient(180deg, #ff89a5, var(--game-rose));
+      box-shadow: 0 6px 0 rgba(38, 49, 79, 0.18);
+    }
+
+    .skill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .skill-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.62;
+      transform: none;
+      filter: grayscale(0.15);
+    }
+
+    .skill-btn:nth-child(2) {
+      background: linear-gradient(180deg, #a993ff, var(--game-violet));
+    }
+
+    .skill-btn:nth-child(3) {
+      background: linear-gradient(180deg, #75d996, var(--game-green));
+    }
+
+    .skill-btn:nth-child(4) {
+      color: #453008;
+      background: linear-gradient(180deg, #ffe88a, var(--game-gold));
+    }
+
+    .map-event {
+      margin-top: 22px;
+      padding: 18px;
+      box-shadow: none;
+    }
+
+    .map-event h4,
+    .build-lab h3 {
+      margin: 0 0 8px;
+      color: #2d3b68;
+      font-family: var(--font-display);
+      font-size: 22px;
+    }
+
+    .map-event p,
+    .build-summary p,
+    .battle-challenge p {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .event-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .reward-chip,
+    .result-badge,
+    .turn-counter {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border: 2px solid rgba(38, 49, 79, 0.14);
+      border-radius: 999px;
+      background: #fff8dc;
+      color: #744700;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .map-event.is-new {
+      animation: panelPop 0.42s ease;
+    }
+
+    .build-lab {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.82fr);
+      gap: 18px;
+      margin-top: 22px;
+      padding: 24px;
+    }
+
+    .skill-pool {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .build-skill {
+      min-height: 48px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    .build-skill.is-blocked {
+      opacity: 0.58;
+    }
+
+    .skill-slots {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .skill-slot {
+      display: grid;
+      min-height: 82px;
+      place-items: center;
+      padding: 12px;
+      border: 2px dashed rgba(38, 49, 79, 0.22);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .skill-slot.filled {
+      color: #26314f;
+      border-style: solid;
+      background: linear-gradient(180deg, #e8f8ff, #fff7ce);
+    }
+
+    .build-summary {
+      padding: 18px;
+      box-shadow: none;
+    }
+
+    .build-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .battle-challenge {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 16px;
+      box-shadow: none;
+    }
+
+    .battle-challenge strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #2d3b68;
+      font-family: var(--font-display);
+      font-size: 18px;
+    }
+
+    .battle-challenge p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .battle-challenge.win {
+      border-color: rgba(73, 191, 122, 0.72);
+      background: linear-gradient(180deg, rgba(238, 255, 244, 0.94), rgba(255, 250, 240, 0.92));
+    }
+
+    .battle-challenge.lose {
+      border-color: rgba(255, 111, 145, 0.7);
+      background: linear-gradient(180deg, rgba(255, 238, 243, 0.94), rgba(255, 250, 240, 0.92));
+    }
+
+    #reset-battle {
+      min-height: 40px;
+      padding: 0 14px;
+    }
+
+    @keyframes panelPop {
+      0% {
+        transform: scale(0.98);
+        box-shadow: 0 0 0 rgba(255, 201, 74, 0);
+      }
+      50% {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 6px rgba(255, 201, 74, 0.18);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 201, 74, 0);
+      }
+    }
+
+    @media (max-width: 940px) {
+      .build-lab {
+        grid-template-columns: 1fr;
+      }
+
+      .battle-challenge {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .skill-pool,
+      .skill-slots {
+        grid-template-columns: 1fr;
+      }
+
+      .icon-xl {
+        width: 118px;
+        height: 118px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true" focusable="false">
+    <symbol id="icon-magic-stone" viewBox="0 0 64 64">
+      <path d="M21 25 32 12l11 13-5 24H26Z" fill="#84d8ff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M22 23h20l-10 9Z" fill="#fff7bd" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M18 18h7l7-8 7 8h7l-5 8H23Z" fill="#ffc94a" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="m13 39 4 2 2 4 2-4 4-2-4-2-2-4-2 4Zm34-1 3 2 2 3 2-3 3-2-3-2-2-3-2 3Z" fill="#fff"/>
+    </symbol>
+    <symbol id="icon-ember-sprout" viewBox="0 0 64 64">
+      <path d="M18 28c-4-8 0-15 7-19 0 7 5 8 7 14 2-6 8-9 13-10-2 8 3 11 4 18 2 13-7 24-20 24-12 0-20-10-11-27Z" fill="#ff9f2e" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M24 35c0-6 5-8 8-14 2 7 8 9 8 17 0 7-5 12-12 12-6 0-10-6-4-15Z" fill="#fff7bd"/>
+      <circle cx="27" cy="38" r="2.5" fill="#26314f"/><circle cx="39" cy="38" r="2.5" fill="#26314f"/>
+      <path d="M29 46c3 2 6 2 9 0" fill="none" stroke="#26314f" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-tide-puff" viewBox="0 0 64 64">
+      <path d="M32 8c10 11 17 19 17 30 0 10-7 18-17 18S15 48 15 38c0-11 7-19 17-30Z" fill="#84d8ff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M20 42c6 5 18 5 25-2" fill="none" stroke="#2f80ed" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="27" cy="34" r="2.5" fill="#26314f"/><circle cx="38" cy="34" r="2.5" fill="#26314f"/>
+      <path d="M13 24c-5 1-8 5-8 9 5-1 9-4 11-8Zm38 7c5 0 8 3 9 7-5 0-9-2-11-5Z" fill="#ccefff" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-leaf-mote" viewBox="0 0 64 64">
+      <path d="M19 31c0-11 7-19 17-19 9 0 16 8 16 19 0 15-9 25-22 25-8 0-11-8-11-25Z" fill="#75d996" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M26 14c-1-8 4-12 11-12 0 8-4 12-11 12Zm12 4c2-7 8-10 15-7-3 7-8 9-15 7Z" fill="#49bf7a" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="29" cy="35" r="2.5" fill="#26314f"/><circle cx="41" cy="35" r="2.5" fill="#26314f"/>
+      <path d="M31 44c3 2 7 2 10 0" fill="none" stroke="#26314f" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-capture-orb" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="21" fill="#fff" stroke="#26314f" stroke-width="4"/>
+      <path d="M12 32h40" stroke="#26314f" stroke-width="4" stroke-linecap="round"/>
+      <path d="M13 29a21 21 0 0 1 38 0Z" fill="#ff6f91"/>
+      <circle cx="32" cy="32" r="7" fill="#fff7bd" stroke="#26314f" stroke-width="4"/>
+      <path d="m49 12 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="#ffc94a"/>
+    </symbol>
+    <symbol id="icon-growth-book" viewBox="0 0 64 64">
+      <path d="M12 14h18c5 0 8 3 8 8v31c0-5-3-8-8-8H12Z" fill="#fff7bd" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M38 22c0-5 3-8 8-8h6v31h-6c-5 0-8 3-8 8Z" fill="#84d8ff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M23 36c0-8 6-12 13-12 0 9-5 13-13 12Z" fill="#49bf7a" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-battle-rune" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="20" fill="#fff7bd" stroke="#26314f" stroke-width="4"/>
+      <path d="M18 46 46 18M18 18l28 28" stroke="#26314f" stroke-width="5" stroke-linecap="round"/>
+      <path d="M44 14h8v8M12 42v8h8" fill="none" stroke="#ff6f91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-map-compass" viewBox="0 0 64 64">
+      <path d="M14 17 27 12l13 5 10-4v35l-10 4-13-5-13 5Z" fill="#fff7bd" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M27 12v35M40 17v35" stroke="#26314f" stroke-width="3" stroke-linecap="round"/>
+      <path d="m33 25 8 2-6 6-8-2Z" fill="#2f80ed" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-academy-tower" viewBox="0 0 64 64">
+      <path d="M20 26h24v28H20Z" fill="#ccefff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M16 26 32 8l16 18Z" fill="#8e6be8" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M28 54V39a4 4 0 0 1 8 0v15M27 29h10" stroke="#26314f" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-castle-gate" viewBox="0 0 64 64">
+      <path d="M12 23h40v31H12Z" fill="#ccefff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M15 23V11h10v12m14 0V11h10v12" fill="#fff7bd" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M26 54V40a6 6 0 0 1 12 0v14" fill="#26314f"/>
+    </symbol>
+    <symbol id="icon-paw-garden" viewBox="0 0 64 64">
+      <circle cx="22" cy="25" r="6" fill="#49bf7a" stroke="#26314f" stroke-width="3"/>
+      <circle cx="32" cy="20" r="6" fill="#75d996" stroke="#26314f" stroke-width="3"/>
+      <circle cx="42" cy="25" r="6" fill="#49bf7a" stroke="#26314f" stroke-width="3"/>
+      <path d="M20 45c3-11 21-11 24 0 1 5-3 8-8 5-3-2-5-2-8 0-5 3-9 0-8-5Z" fill="#fff7bd" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-arena-medal" viewBox="0 0 64 64">
+      <path d="M22 8h20l-5 17H27Z" fill="#ff6f91" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="32" cy="39" r="16" fill="#ffc94a" stroke="#26314f" stroke-width="4"/>
+      <path d="m32 29 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z" fill="#fff7bd" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-mystic-island" viewBox="0 0 64 64">
+      <path d="M11 50c8-10 34-10 42 0Z" fill="#49bf7a" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M29 49c-1-15 4-25 15-31-10 2-17 7-21 16" fill="none" stroke="#26314f" stroke-width="4" stroke-linecap="round"/>
+      <path d="M35 20c7-9 15-7 19 0-8-1-14 0-19 0Zm-8 9c-8-6-15-3-18 4 8-2 13-2 18-4Z" fill="#75d996" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/>
+      <path d="m47 9 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" fill="#ffc94a"/>
+    </symbol>
+    <symbol id="icon-pet-stage-1" viewBox="0 0 96 96">
+      <path d="M32 33c-4-13 5-21 16-27 0 12 8 15 11 25 4-7 10-10 18-11-2 12 5 17 6 27 2 22-13 39-36 39-21 0-34-18-15-53Z" fill="#ff9f2e" stroke="#26314f" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M40 55c0-10 8-13 13-23 4 11 13 15 13 27 0 11-8 19-21 19-9 0-15-9-5-23Z" fill="#fff7bd"/>
+      <circle cx="42" cy="58" r="4" fill="#26314f"/><circle cx="61" cy="58" r="4" fill="#26314f"/>
+      <path d="M46 70c6 4 12 4 18 0" fill="none" stroke="#26314f" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-pet-stage-2" viewBox="0 0 96 96">
+      <path d="M19 44c4-10 13-15 27-15s24 6 30 18c10 18-4 40-29 40S12 65 19 44Z" fill="#ff9f2e" stroke="#26314f" stroke-width="6" stroke-linejoin="round"/>
+      <path d="m24 38-7-20 22 10m31 10 9-19-24 9" fill="#ffc94a" stroke="#26314f" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M39 62c6 4 15 4 21 0" fill="none" stroke="#26314f" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="37" cy="52" r="4" fill="#26314f"/><circle cx="62" cy="52" r="4" fill="#26314f"/>
+      <path d="M70 70c8-1 13-6 17-14 2 13-5 23-18 25" fill="#ff6f91" stroke="#26314f" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-pet-stage-3" viewBox="0 0 96 96">
+      <path d="M20 46c0-19 13-31 30-31 18 0 31 13 31 32 0 24-14 40-32 40-19 0-29-17-29-41Z" fill="#ff9f2e" stroke="#26314f" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M27 26 39 9l10 15L63 9l8 18" fill="#ffc94a" stroke="#26314f" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M28 70c8 8 32 8 42 0" fill="none" stroke="#26314f" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="39" cy="50" r="4" fill="#26314f"/><circle cx="61" cy="50" r="4" fill="#26314f"/>
+      <path d="m18 73 7 3 3 7 3-7 7-3-7-3-3-7-3 7Zm58-52 5 2 2 5 2-5 5-2-5-2-2-5-2 5Z" fill="#fff7bd"/>
+    </symbol>
+    <symbol id="icon-el-fire" viewBox="0 0 64 64"><path d="M20 29c-4-10 3-18 12-25 0 12 11 14 12 27 4-5 7-9 9-15 8 19-1 40-21 40-15 0-23-12-12-27Z" fill="#ff9f2e" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-el-water" viewBox="0 0 64 64"><path d="M32 7c11 14 18 23 18 33 0 9-7 17-18 17s-18-8-18-17c0-10 7-19 18-33Z" fill="#84d8ff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-el-leaf" viewBox="0 0 64 64"><path d="M12 45c3-22 20-34 40-31-1 22-15 38-40 31Z" fill="#49bf7a" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M18 42c10-9 20-15 31-24" stroke="#26314f" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="icon-el-spark" viewBox="0 0 64 64"><path d="M36 5 16 35h15l-4 24 21-32H33Z" fill="#ffc94a" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-el-crystal" viewBox="0 0 64 64"><path d="M32 5 50 20v26L32 59 14 46V20Z" fill="#ccefff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M32 5v54M14 20l18 13 18-13M14 46l18-13 18 13" fill="none" stroke="#2f80ed" stroke-width="3" stroke-linecap="round"/></symbol>
+    <symbol id="icon-impact" viewBox="0 0 64 64"><path d="m32 6 6 16 16-6-6 16 10 12-17 2-9 12-9-12-17-2 10-12-6-16 16 6Z" fill="#8e6be8" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-vine" viewBox="0 0 64 64"><path d="M14 49c18-1 25-11 25-29" fill="none" stroke="#26314f" stroke-width="5" stroke-linecap="round"/><path d="M38 26c10-5 15-3 18 6-10 4-15 1-18-6Zm-15 13c-9-7-13-6-18 1 8 6 14 6 18-1Z" fill="#49bf7a" stroke="#26314f" stroke-width="3" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 64 64"><path d="M32 7 51 15v15c0 14-8 23-19 28-11-5-19-14-19-28V15Z" fill="#fff7bd" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M32 16v31" stroke="#26314f" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="icon-monitor" viewBox="0 0 64 64"><path d="M11 15h42v29H11Z" fill="#84d8ff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M24 54h16M32 44v10" stroke="#26314f" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="icon-scroll" viewBox="0 0 64 64"><path d="M18 13h26c6 0 9 4 9 9 0 4-3 7-7 7H20c-5 0-9 4-9 9s4 9 9 9h27" fill="#fff7bd" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M22 24h18M24 38h19" stroke="#26314f" stroke-width="3" stroke-linecap="round"/></symbol>
+    <symbol id="icon-star-up" viewBox="0 0 64 64"><path d="m32 8 6 13 14 2-10 10 2 14-12-7-12 7 2-14-10-10 14-2Z" fill="#ffc94a" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M12 55h40M19 49l10-10 8 8 10-16" fill="none" stroke="#49bf7a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-chat" viewBox="0 0 64 64"><path d="M12 16h35v24H28L16 51V40h-4Z" fill="#ccefff" stroke="#26314f" stroke-width="4" stroke-linejoin="round"/><path d="M27 24h20v17" fill="none" stroke="#26314f" stroke-width="3" stroke-linecap="round"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="#fff7bd" stroke="#26314f" stroke-width="4"/><path d="M32 18v16l11 6" fill="none" stroke="#26314f" stroke-width="4" stroke-linecap="round"/></symbol>
+  </svg>
+  <div class="page">
+    <header class="topbar">
+      <nav class="nav" aria-label="页面导航">
+        <a class="brand" href="#top" aria-label="回到顶部">
+          <span class="brand-mark"><svg class="game-icon"><use href="#icon-magic-stone"></use></svg></span>
+          <span>一页读懂洛克王国</span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link active" href="#intro">概览</a>
+          <a class="nav-link" href="#play">玩法</a>
+          <a class="nav-link" href="#map">王国</a>
+          <a class="nav-link" href="#pets">宠物</a>
+          <a class="nav-link" href="#battle">战斗</a>
+          <a class="nav-link" href="#memory">怀旧</a>
+          <a class="nav-link" href="#quiz">测试</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="section hero" id="intro">
+        <div>
+          <div class="eyebrow">魔法学院 · 宠物养成 · 回合冒险</div>
+          <h1>一页读懂洛克王国</h1>
+          <p class="hero-copy">
+            洛克王国是一款以魔法世界、宠物收集、回合制战斗和剧情冒险为核心的页游。玩家扮演小洛克，从魔法学院出发，认识伙伴、捕捉宠物、挑战徽章，在一张张地图里完成属于自己的王国冒险。
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#play">开始探索</a>
+            <a class="btn secondary" href="#quiz">做个小测试</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="魔法王国插画">
+          <div class="sun"></div>
+          <div class="castle">
+            <div class="tower left"><div class="roof"></div><div class="window"></div></div>
+            <div class="tower mid"><div class="roof"></div><div class="window"></div><div class="door"></div></div>
+            <div class="tower right"><div class="roof"></div><div class="window"></div></div>
+          </div>
+          <div class="pet one"><svg class="game-icon"><use href="#icon-ember-sprout"></use></svg></div>
+          <div class="pet two"><svg class="game-icon"><use href="#icon-tide-puff"></use></svg></div>
+          <div class="pet three"><svg class="game-icon"><use href="#icon-leaf-mote"></use></svg></div>
+          <div class="hills"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="intro-panel">
+          <article class="big-card">
+            <div class="section-kicker">What is it</div>
+            <h2>它不是一张静态地图，而是一座每天都能回去的魔法王国。</h2>
+            <p>
+              洛克王国的核心体验很清晰：探索地图，遇见 NPC，完成任务，收集宠物，然后把宠物练强。它的快乐不只来自胜负，也来自“今天上线看看有什么新活动”的陪伴感。
+            </p>
+            <div class="stat-grid">
+              <div class="stat"><strong>宠物</strong><span>收集、培养、进化、搭配技能</span></div>
+              <div class="stat"><strong>地图</strong><span>学院、城堡、宠物园、活动区域</span></div>
+              <div class="stat"><strong>战斗</strong><span>回合制，属性克制，技能策略</span></div>
+              <div class="stat"><strong>记忆</strong><span>放学上线、做任务、练宠物</span></div>
+            </div>
+          </article>
+          <aside class="note-card">
+            <div>
+              <div class="section-kicker" style="color:#ffe7a1;">一句话版本</div>
+              <h2>把宠物养成、魔法冒险和童年陪伴装进浏览器。</h2>
+            </div>
+            <p>
+              如果你没玩过，它像一座轻量版魔法乐园；如果你玩过，它大概率会让你想起那段“先写作业还是先上线领活动奖励”的日子。
+            </p>
+            <div class="badge-row">
+              <span class="badge">100% 童年浓度</span>
+              <span class="badge">宠物图鉴</span>
+              <span class="badge">魔法学院</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="play">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Core loop</div>
+            <h2>四件事，构成洛克王国的主要循环。</h2>
+          </div>
+          <p class="section-intro">点击或悬停卡片，翻到背面看更具体的玩法说明。</p>
+        </div>
+        <div class="feature-grid">
+          <button class="flip-card" type="button">
+            <span class="flip-inner">
+              <span class="flip-face">
+                <span class="feature-icon"><svg class="game-icon icon-md"><use href="#icon-capture-orb"></use></svg></span>
+                <span><h3>宠物收集</h3><p>在不同场景遇见宠物，捕捉并加入自己的队伍。</p></span>
+              </span>
+              <span class="flip-face flip-back">
+                <span><h3>为什么重要</h3><p>图鉴感是核心驱动力。每只宠物都有属性、技能、外观和成长空间，收集本身就很有目标感。</p></span>
+              </span>
+            </span>
+          </button>
+          <button class="flip-card" type="button">
+            <span class="flip-inner">
+              <span class="flip-face">
+                <span class="feature-icon"><svg class="game-icon icon-md"><use href="#icon-growth-book"></use></svg></span>
+                <span><h3>宠物培养</h3><p>升级、进化、学习技能，让伙伴一步步变强。</p></span>
+              </span>
+              <span class="flip-face flip-back">
+                <span><h3>养成乐趣</h3><p>最难忘的往往不是一场战斗，而是亲手把一只小宠物练到能独当一面的过程。</p></span>
+              </span>
+            </span>
+          </button>
+          <button class="flip-card" type="button">
+            <span class="flip-inner">
+              <span class="flip-face">
+                <span class="feature-icon"><svg class="game-icon icon-md"><use href="#icon-battle-rune"></use></svg></span>
+                <span><h3>回合战斗</h3><p>选择技能、判断属性克制，用策略赢下挑战。</p></span>
+              </span>
+              <span class="flip-face flip-back">
+                <span><h3>简单但不空</h3><p>上手门槛低，但打 BOSS 或强敌时，要考虑速度、技能效果、属性和阵容搭配。</p></span>
+              </span>
+            </span>
+          </button>
+          <button class="flip-card" type="button">
+            <span class="flip-inner">
+              <span class="flip-face">
+                <span class="feature-icon"><svg class="game-icon icon-md"><use href="#icon-map-compass"></use></svg></span>
+                <span><h3>剧情探索</h3><p>穿梭地图、遇见角色、完成任务和活动。</p></span>
+              </span>
+              <span class="flip-face flip-back">
+                <span><h3>世界感来源</h3><p>王国之所以像王国，是因为它有地点、角色、日常和节日活动，而不只是战斗菜单。</p></span>
+              </span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section" id="map">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">World map</div>
+            <h2>点一点地图，看看王国里都有哪些地方。</h2>
+          </div>
+          <p class="section-intro">这里用互动地图概括洛克王国的空间感：学院、城堡、宠物园、竞技场和神秘区域。</p>
+        </div>
+        <div class="map-layout">
+          <div class="map-board" aria-label="洛克王国互动地图">
+            <div class="path"></div>
+            <button class="place p1 active" type="button" data-place="academy"><svg class="game-icon"><use href="#icon-academy-tower"></use></svg><span>魔法学院<small>起点与日常</small></span></button>
+            <button class="place p2" type="button" data-place="castle"><svg class="game-icon"><use href="#icon-castle-gate"></use></svg><span>王国城堡<small>剧情核心</small></span></button>
+            <button class="place p3" type="button" data-place="garden"><svg class="game-icon"><use href="#icon-paw-garden"></use></svg><span>宠物园<small>捕捉伙伴</small></span></button>
+            <button class="place p4" type="button" data-place="arena"><svg class="game-icon"><use href="#icon-arena-medal"></use></svg><span>竞技场<small>徽章挑战</small></span></button>
+            <button class="place p5" type="button" data-place="island"><svg class="game-icon"><use href="#icon-mystic-island"></use></svg><span>神秘岛屿<small>活动与冒险</small></span></button>
+          </div>
+          <article class="info-card map-info">
+            <h3 id="place-title">魔法学院</h3>
+            <p id="place-desc">小洛克的起点，像是整个游戏的精神入口。这里承接新手引导、日常任务和魔法世界的基础设定。</p>
+            <div class="chips" id="place-tags">
+              <span class="chip">新手起点</span><span class="chip">NPC</span><span class="chip">任务</span>
+            </div>
+            <div class="map-event" id="map-event">
+              <h4 id="event-title">今日事件：遗失的魔法笔记</h4>
+              <p id="event-desc">学院老师把笔记落在走廊里了，帮忙找回后可以获得一点宠物训练经验。</p>
+              <div class="event-actions">
+                <span class="reward-chip" id="event-reward">奖励：经验 +20</span>
+                <button class="btn secondary" id="event-btn" type="button">刷新事件</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="pets">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Pet system</div>
+            <h2>宠物为什么让人记得这么久？因为它像伙伴，不像道具。</h2>
+          </div>
+          <p class="section-intro">切换成长阶段，看看一只宠物如何从“刚遇见”变成“能上场”。</p>
+        </div>
+        <div class="pet-layout">
+          <article class="info-card evolution-card">
+            <div class="pet-avatar" id="pet-avatar"><svg class="game-icon icon-xl"><use href="#icon-pet-stage-1"></use></svg></div>
+            <h3 id="pet-name">初遇形态</h3>
+            <p id="pet-line">刚加入队伍的小伙伴，能力普通，但有很明确的成长期待。</p>
+          </article>
+          <article class="detail-box">
+            <div class="tabs">
+              <button class="tab-btn active" type="button" data-stage="start">初始形态</button>
+              <button class="tab-btn" type="button" data-stage="middle">进化形态</button>
+              <button class="tab-btn" type="button" data-stage="final">最终形态</button>
+            </div>
+            <h3 id="stage-title">从遇见开始</h3>
+            <p id="stage-desc">玩家在地图或活动中遇见宠物，通过捕捉或任务获得。这个阶段的重点不是强度，而是建立“我要把它练起来”的目标。</p>
+            <div class="trait-list">
+              <div class="trait"><b>属性</b><span id="trait-type">火系倾向</span></div>
+              <div class="trait"><b>定位</b><span id="trait-role">成长型伙伴</span></div>
+              <div class="trait"><b>关键词</b><span id="trait-key">收集、陪伴</span></div>
+            </div>
+          </article>
+        </div>
+        <div class="build-lab">
+          <div>
+            <h3>技能搭配实验室</h3>
+            <p style="color: var(--muted); line-height: 1.8; margin-bottom: 0;">从下面选 3 个技能，看看这只宠物更适合走爆发、控制，还是稳健路线。</p>
+            <div class="skill-pool">
+              <button class="build-skill" type="button" data-skill="ember"><svg class="game-icon icon-sm"><use href="#icon-el-fire"></use></svg>火花</button>
+              <button class="build-skill" type="button" data-skill="impact"><svg class="game-icon icon-sm"><use href="#icon-impact"></use></svg>魔法冲击</button>
+              <button class="build-skill" type="button" data-skill="vine"><svg class="game-icon icon-sm"><use href="#icon-vine"></use></svg>藤蔓缠绕</button>
+              <button class="build-skill" type="button" data-skill="shield"><svg class="game-icon icon-sm"><use href="#icon-shield"></use></svg>魔法盾</button>
+              <button class="build-skill" type="button" data-skill="speed"><svg class="game-icon icon-sm"><use href="#icon-star-up"></use></svg>高速移动</button>
+              <button class="build-skill" type="button" data-skill="heal"><svg class="game-icon icon-sm"><use href="#icon-el-leaf"></use></svg>回复术</button>
+            </div>
+          </div>
+          <div>
+            <div class="skill-slots" id="skill-slots">
+              <div class="skill-slot">技能槽 1</div>
+              <div class="skill-slot">技能槽 2</div>
+              <div class="skill-slot">技能槽 3</div>
+            </div>
+            <div class="build-summary">
+              <h3 id="build-title">等待搭配</h3>
+              <p id="build-desc">先选择技能，系统会根据攻击、控制、防御和回复比例判断培养方向。</p>
+              <div class="build-actions">
+                <button class="btn secondary" id="clear-build" type="button">清空搭配</button>
+                <a class="btn primary" href="#battle">去试试战斗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="battle">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Battle logic</div>
+            <h2>战斗看起来轻松，真正赢得漂亮要懂克制。</h2>
+          </div>
+          <p class="section-intro">先选一个属性看克制关系，再点技能模拟一回合战斗反馈。</p>
+        </div>
+        <div class="element-layout">
+          <article class="info-card element-panel">
+            <h3>属性克制小面板</h3>
+            <p style="color: var(--muted); line-height: 1.8;">选择属性后，面板会告诉你适合攻击谁，以及需要小心谁。</p>
+            <div class="tabs" id="element-tabs">
+              <button class="element-btn active" type="button" data-element="fire"><svg class="game-icon icon-sm"><use href="#icon-el-fire"></use></svg>火</button>
+              <button class="element-btn" type="button" data-element="water"><svg class="game-icon icon-sm"><use href="#icon-el-water"></use></svg>水</button>
+              <button class="element-btn" type="button" data-element="grass"><svg class="game-icon icon-sm"><use href="#icon-el-leaf"></use></svg>草</button>
+              <button class="element-btn" type="button" data-element="electric"><svg class="game-icon icon-sm"><use href="#icon-el-spark"></use></svg>电</button>
+              <button class="element-btn" type="button" data-element="ice"><svg class="game-icon icon-sm"><use href="#icon-el-crystal"></use></svg>冰</button>
+            </div>
+            <div class="element-result">
+              <div class="result-card"><strong>适合攻击</strong><span id="strong-against">草系、冰系。用火焰压制对方，容易打出优势。</span></div>
+              <div class="result-card"><strong>需要小心</strong><span id="weak-against">水系。遇到水系时，硬碰硬通常不是好选择。</span></div>
+            </div>
+          </article>
+          <article class="battle-panel">
+            <div class="battle-stage">
+              <div class="fighter">
+                <div class="fighter-icon" id="hero-fighter"><svg class="game-icon"><use href="#icon-el-fire"></use></svg></div>
+                <strong>你的宠物</strong>
+                <div class="hp"><div class="hp-fill" style="width: 88%;"></div></div>
+              </div>
+              <div class="vs">VS</div>
+              <div class="fighter enemy">
+                <div class="fighter-icon" id="enemy-fighter"><svg class="game-icon"><use href="#icon-el-leaf"></use></svg></div>
+                <strong>野外宠物</strong>
+                <div class="hp"><div class="hp-fill" id="enemy-hp" style="width: 100%;"></div></div>
+              </div>
+            </div>
+            <div class="skills">
+              <button class="skill-btn" type="button" data-damage="32" data-log="火花命中！效果拔群，对手的血量明显下降。"><svg class="game-icon icon-sm"><use href="#icon-el-fire"></use></svg>火花</button>
+              <button class="skill-btn" type="button" data-damage="18" data-log="魔法冲击命中，伤害稳定，但没有触发克制。"><svg class="game-icon icon-sm"><use href="#icon-impact"></use></svg>魔法冲击</button>
+              <button class="skill-btn" type="button" data-damage="24" data-log="藤蔓缠绕成功，对手行动变慢了。"><svg class="game-icon icon-sm"><use href="#icon-vine"></use></svg>藤蔓缠绕</button>
+              <button class="skill-btn" type="button" data-damage="12" data-log="防御姿态启动，这回合更稳，但伤害较低。"><svg class="game-icon icon-sm"><use href="#icon-shield"></use></svg>防御姿态</button>
+            </div>
+            <div class="battle-log" id="battle-log">选择一个技能，体验一回合战斗反馈。</div>
+            <div class="battle-challenge" id="battle-challenge">
+              <div>
+                <strong id="challenge-title">挑战目标</strong>
+                <p id="challenge-desc">两回合内击败野外宠物，试试属性和技能选择。</p>
+              </div>
+              <div class="turn-counter" id="turn-counter">回合 0 / 2</div>
+              <span class="result-badge" id="challenge-result">等待开始</span>
+              <button class="btn secondary" id="reset-battle" type="button">重开</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="memory">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Nostalgia</div>
+            <h2>它让人怀念的，不只是游戏本身。</h2>
+          </div>
+          <p class="section-intro">点击标签，切换一段属于洛克王国玩家的共同记忆。</p>
+        </div>
+        <div class="memory-zone">
+          <div class="memory-buttons">
+            <button class="memory-btn active" type="button" data-memory="afterSchool"><svg class="game-icon icon-sm"><use href="#icon-monitor"></use></svg>放学后上线</button>
+            <button class="memory-btn" type="button" data-memory="daily"><svg class="game-icon icon-sm"><use href="#icon-scroll"></use></svg>每日任务</button>
+            <button class="memory-btn" type="button" data-memory="training"><svg class="game-icon icon-sm"><use href="#icon-star-up"></use></svg>练级刷怪</button>
+            <button class="memory-btn" type="button" data-memory="boss"><svg class="game-icon icon-sm"><use href="#icon-arena-medal"></use></svg>挑战 BOSS</button>
+            <button class="memory-btn" type="button" data-memory="evolve"><svg class="game-icon icon-sm"><use href="#icon-magic-stone"></use></svg>宠物进化</button>
+            <button class="memory-btn" type="button" data-memory="friends"><svg class="game-icon icon-sm"><use href="#icon-chat"></use></svg>朋友讨论</button>
+          </div>
+          <article class="memory-card">
+            <h3 id="memory-title">放学后上线</h3>
+            <p id="memory-desc">那种快乐很具体：电脑开机，浏览器打开，先看看今天有什么活动，再决定要不要去练宠物。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="quiz">
+        <article class="quiz-panel">
+          <div class="section-kicker">Mini quiz</div>
+          <h2 style="margin-left:auto;margin-right:auto;">你更像哪类小洛克？</h2>
+          <p style="max-width:680px;margin:14px auto 0;color:var(--muted);line-height:1.8;">选一个最吸引你的玩法，看看你的王国身份。</p>
+          <div class="quiz-options">
+            <button class="quiz-btn" type="button" data-quiz="collector"><svg class="game-icon icon-sm"><use href="#icon-capture-orb"></use></svg>抓宠和图鉴</button>
+            <button class="quiz-btn" type="button" data-quiz="fighter"><svg class="game-icon icon-sm"><use href="#icon-battle-rune"></use></svg>技能搭配</button>
+            <button class="quiz-btn" type="button" data-quiz="explorer"><svg class="game-icon icon-sm"><use href="#icon-map-compass"></use></svg>地图剧情</button>
+            <button class="quiz-btn" type="button" data-quiz="nostalgic"><svg class="game-icon icon-sm"><use href="#icon-clock"></use></svg>每日活动</button>
+          </div>
+          <div class="quiz-result" id="quiz-result">
+            <h3>等待选择</h3>
+            <p>点击上面的选项，生成你的“小洛克类型”。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <div class="final-line">
+          <h2>如果用一句话概括洛克王国：它是一座能让宠物、地图、任务和朋友记忆一起发光的魔法王国。</h2>
+          <p>看完这一页，你就能抓住它的核心：收集宠物，培养伙伴，理解克制，探索王国，然后在某个瞬间忽然想起自己的童年电脑桌。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const places = {
+      academy: {
+        title: "魔法学院",
+        desc: "小洛克的起点，像是整个游戏的精神入口。这里承接新手引导、日常任务和魔法世界的基础设定。",
+        tags: ["新手起点", "NPC", "任务"],
+        events: [
+          { title: "遗失的魔法笔记", desc: "学院老师把笔记落在走廊里了，帮忙找回后可以获得一点宠物训练经验。", reward: "奖励：经验 +20" },
+          { title: "星光课堂开讲", desc: "今晚的课堂会讲属性克制，听完后战斗提示会变得更清楚。", reward: "奖励：克制线索" },
+          { title: "新生宠物报到", desc: "有只胆小的小宠物躲在书架后面，靠近它时记得放慢脚步。", reward: "奖励：遇见新伙伴" }
+        ]
+      },
+      castle: {
+        title: "王国城堡",
+        desc: "王国故事的中心区域，适合承载主线剧情、重要角色和节日事件，让世界不只是菜单。",
+        tags: ["剧情", "角色", "仪式感"],
+        events: [
+          { title: "城堡徽章线索", desc: "守卫发现一枚旧徽章，需要你去确认它属于哪段王国历史。", reward: "奖励：徽章线索" },
+          { title: "节日钟声", desc: "城堡广场响起钟声，NPC 们正在准备新的节日任务。", reward: "奖励：活动券 +1" },
+          { title: "国王的委托", desc: "一封委托信送到大厅，目标是调查附近地图的异常魔力。", reward: "奖励：剧情进度" }
+        ]
+      },
+      garden: {
+        title: "宠物园",
+        desc: "宠物收集的代表地点。玩家在这里感受到遇见、捕捉、观察属性和补全图鉴的乐趣。",
+        tags: ["捕捉", "图鉴", "伙伴"],
+        events: [
+          { title: "陌生脚印", desc: "草地上出现一串小脚印，顺着脚印可能遇见一只稀有宠物。", reward: "奖励：捕捉机会" },
+          { title: "咕噜球检查", desc: "背包里的捕捉球需要重新校准，成功后捕捉提示会更明显。", reward: "奖励：捕捉成功率" },
+          { title: "宠物午睡时间", desc: "午后的宠物园很安静，适合观察宠物习性和属性特点。", reward: "奖励：图鉴记录" }
+        ]
+      },
+      arena: {
+        title: "竞技场",
+        desc: "把养成成果拿出来检验的地方。属性克制、技能选择和阵容搭配会在这里变得更重要。",
+        tags: ["战斗", "徽章", "策略"],
+        events: [
+          { title: "两回合挑战", desc: "竞技场开放限时练习：两回合内击败对手，就能获得徽章试炼资格。", reward: "奖励：挑战资格" },
+          { title: "属性试炼", desc: "裁判要求你先判断对方属性，再决定派哪只宠物上场。", reward: "奖励：策略评分" },
+          { title: "技能连携课", desc: "训练师示范了攻击、控制、防御组合，适合带着新技能来试。", reward: "奖励：技能灵感" }
+        ]
+      },
+      island: {
+        title: "神秘岛屿",
+        desc: "活动和冒险感的来源。它代表那些限时任务、特别宠物和让人每天想上线看看的内容。",
+        tags: ["活动", "探索", "惊喜"],
+        events: [
+          { title: "潮汐宝箱", desc: "退潮后露出一个宝箱，里面可能藏着地图碎片或宠物零食。", reward: "奖励：地图碎片" },
+          { title: "岛上流星雨", desc: "夜里有流星落在岛上，跟随光点可以找到特殊任务入口。", reward: "奖励：星星金币" },
+          { title: "迷雾航线", desc: "岛屿周围出现迷雾，只有完成小任务才能点亮新的路线。", reward: "奖励：探索进度" }
+        ]
+      }
+    };
+
+    const stages = {
+      start: {
+        icon: "icon-pet-stage-1",
+        name: "初遇形态",
+        line: "刚加入队伍的小伙伴，能力普通，但有很明确的成长期待。",
+        title: "从遇见开始",
+        desc: "玩家在地图或活动中遇见宠物，通过捕捉或任务获得。这个阶段的重点不是强度，而是建立“我要把它练起来”的目标。",
+        type: "火系倾向",
+        role: "成长型伙伴",
+        key: "收集、陪伴"
+      },
+      middle: {
+        icon: "icon-pet-stage-2",
+        name: "进化形态",
+        line: "外观更有辨识度，技能也开始形成自己的战斗节奏。",
+        title: "从练级到成型",
+        desc: "通过战斗、任务和资源投入，宠物开始进化。玩家能明显感觉到它变强了，也更愿意继续投入时间。",
+        type: "火系强化",
+        role: "稳定输出",
+        key: "升级、技能"
+      },
+      final: {
+        icon: "icon-pet-stage-3",
+        name: "最终形态",
+        line: "真正能进入主力阵容的伙伴，承载了玩家的投入和记忆。",
+        title: "从宠物到主力",
+        desc: "最终形态往往意味着更完整的技能组、更强的数值和更鲜明的角色感。它不只是战斗单位，也是玩家在王国里的成长证明。",
+        type: "高阶火系",
+        role: "主力核心",
+        key: "进化、成就"
+      }
+    };
+
+    const elements = {
+      fire: {
+        strong: "草系、冰系。用火焰压制对方，容易打出优势。",
+        weak: "水系。遇到水系时，硬碰硬通常不是好选择。",
+        hero: "火",
+        enemy: "草",
+        heroIcon: "icon-el-fire",
+        enemyIcon: "icon-el-leaf"
+      },
+      water: {
+        strong: "火系。水系适合处理爆发型火系对手。",
+        weak: "草系、电系。被消耗或控制时会比较难受。",
+        hero: "水",
+        enemy: "火",
+        heroIcon: "icon-el-water",
+        enemyIcon: "icon-el-fire"
+      },
+      grass: {
+        strong: "水系。草系常给人稳定、续航和控制的感觉。",
+        weak: "火系、冰系。遇到高爆发属性时要谨慎换宠。",
+        hero: "草",
+        enemy: "水",
+        heroIcon: "icon-el-leaf",
+        enemyIcon: "icon-el-water"
+      },
+      electric: {
+        strong: "水系。电系常见特点是速度快、压制感强。",
+        weak: "部分地面或抗性对手。需要看具体技能和规则。",
+        hero: "电",
+        enemy: "水",
+        heroIcon: "icon-el-spark",
+        enemyIcon: "icon-el-water"
+      },
+      ice: {
+        strong: "草系。冰系适合打出控制感和针对性。",
+        weak: "火系。遇到火系攻击时要注意防守。",
+        hero: "冰",
+        enemy: "草",
+        heroIcon: "icon-el-crystal",
+        enemyIcon: "icon-el-leaf"
+      }
+    };
+
+    const memories = {
+      afterSchool: {
+        title: "放学后上线",
+        desc: "那种快乐很具体：电脑开机，浏览器打开，先看看今天有什么活动，再决定要不要去练宠物。"
+      },
+      daily: {
+        title: "每日任务",
+        desc: "每天都有一点小目标。奖励不一定惊天动地，但它让王国像一个会持续运转的地方。"
+      },
+      training: {
+        title: "练级刷怪",
+        desc: "最朴素的成长感，就是昨天还打不过，今天多练几级之后终于能赢。"
+      },
+      boss: {
+        title: "挑战 BOSS",
+        desc: "真正紧张的时刻，是看着血条一点点下降，然后赌最后一个技能能不能收掉。"
+      },
+      evolve: {
+        title: "宠物进化",
+        desc: "进化动画出现的那一刻，像是自己的坚持被游戏认真回应了一次。"
+      },
+      friends: {
+        title: "朋友讨论",
+        desc: "哪只宠物更强、哪个技能好用、今天活动在哪接，这些聊天让游戏从屏幕里延伸到了课间。"
+      }
+    };
+
+    const quiz = {
+      collector: {
+        title: "收藏家型小洛克",
+        desc: "你最享受补全图鉴和遇见新宠物的过程。对你来说，王国的魅力在于“还有谁没见过”。"
+      },
+      fighter: {
+        title: "战斗党型小洛克",
+        desc: "你喜欢研究属性、技能和阵容。赢下难打的挑战，会比单纯升级更让你兴奋。"
+      },
+      explorer: {
+        title: "探险家型小洛克",
+        desc: "你会被地图、NPC 和剧情吸引。你喜欢知道这个地方发生了什么，以及下一个区域藏着什么。"
+      },
+      nostalgic: {
+        title: "怀旧玩家型小洛克",
+        desc: "你记住的是一种日常感：上线、活动、伙伴、朋友。游戏像一扇回到某段时间的门。"
+      }
+    };
+
+    const buildSkills = {
+      ember: { name: "火花", role: "attack", icon: "icon-el-fire" },
+      impact: { name: "魔法冲击", role: "attack", icon: "icon-impact" },
+      vine: { name: "藤蔓缠绕", role: "control", icon: "icon-vine" },
+      shield: { name: "魔法盾", role: "defense", icon: "icon-shield" },
+      speed: { name: "高速移动", role: "control", icon: "icon-star-up" },
+      heal: { name: "回复术", role: "support", icon: "icon-el-leaf" }
+    };
+
+    const roleLabels = {
+      attack: "攻击",
+      control: "控制",
+      defense: "防御",
+      support: "回复"
+    };
+
+    const iconMarkup = (id, size = "icon-sm") => `<svg class="game-icon ${size}" aria-hidden="true"><use href="#${id}"></use></svg>`;
+    const setIcon = (selector, id, size = "icon-lg") => {
+      document.querySelector(selector).innerHTML = iconMarkup(id, size);
+    };
+
+    document.querySelectorAll(".flip-card").forEach((card) => {
+      card.addEventListener("click", () => card.classList.toggle("flipped"));
+    });
+
+    let currentPlace = "academy";
+    let currentEventIndex = 0;
+
+    function renderMapEvent(placeKey, eventIndex = 0) {
+      const event = places[placeKey].events[eventIndex];
+      const eventPanel = document.querySelector("#map-event");
+      document.querySelector("#event-title").textContent = `今日事件：${event.title}`;
+      document.querySelector("#event-desc").textContent = event.desc;
+      document.querySelector("#event-reward").textContent = event.reward;
+      eventPanel.classList.remove("is-new");
+      void eventPanel.offsetWidth;
+      eventPanel.classList.add("is-new");
+    }
+
+    document.querySelectorAll(".place").forEach((button) => {
+      button.addEventListener("click", () => {
+        const data = places[button.dataset.place];
+        currentPlace = button.dataset.place;
+        currentEventIndex = 0;
+        document.querySelectorAll(".place").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        document.querySelector("#place-title").textContent = data.title;
+        document.querySelector("#place-desc").textContent = data.desc;
+        document.querySelector("#place-tags").innerHTML = data.tags.map((tag) => `<span class="chip">${tag}</span>`).join("");
+        renderMapEvent(currentPlace, currentEventIndex);
+      });
+    });
+
+    document.querySelector("#event-btn").addEventListener("click", () => {
+      const events = places[currentPlace].events;
+      currentEventIndex = (currentEventIndex + 1) % events.length;
+      renderMapEvent(currentPlace, currentEventIndex);
+    });
+
+    document.querySelectorAll(".tab-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const data = stages[button.dataset.stage];
+        document.querySelectorAll(".tab-btn").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        setIcon("#pet-avatar", data.icon, "icon-xl");
+        document.querySelector("#pet-name").textContent = data.name;
+        document.querySelector("#pet-line").textContent = data.line;
+        document.querySelector("#stage-title").textContent = data.title;
+        document.querySelector("#stage-desc").textContent = data.desc;
+        document.querySelector("#trait-type").textContent = data.type;
+        document.querySelector("#trait-role").textContent = data.role;
+        document.querySelector("#trait-key").textContent = data.key;
+      });
+    });
+
+    let selectedSkills = [];
+
+    function renderBuild() {
+      const slots = document.querySelectorAll(".skill-slot");
+      slots.forEach((slot, index) => {
+        const key = selectedSkills[index];
+        if (!key) {
+          slot.className = "skill-slot";
+          slot.textContent = `技能槽 ${index + 1}`;
+          return;
+        }
+        const skill = buildSkills[key];
+        slot.className = "skill-slot filled";
+        slot.innerHTML = `${iconMarkup(skill.icon, "icon-sm")}<span>${skill.name}</span>`;
+      });
+
+      document.querySelectorAll(".build-skill").forEach((button) => {
+        const isSelected = selectedSkills.includes(button.dataset.skill);
+        button.classList.toggle("active", isSelected);
+        button.classList.toggle("is-blocked", selectedSkills.length >= 3 && !isSelected);
+      });
+
+      const counts = selectedSkills.reduce((acc, key) => {
+        const role = buildSkills[key].role;
+        acc[role] = (acc[role] || 0) + 1;
+        return acc;
+      }, {});
+
+      let title = "等待搭配";
+      let desc = "先选择技能，系统会根据攻击、控制、防御和回复比例判断培养方向。";
+      if (selectedSkills.length > 0) {
+        const topRole = Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
+        const names = selectedSkills.map((key) => buildSkills[key].name).join("、");
+        if (topRole === "attack") {
+          title = "爆发型搭配";
+          desc = `你选择了 ${names}。这套更适合快速压低血量，进入竞技场前要注意被克制属性反打。`;
+        } else if (topRole === "control") {
+          title = "控制型搭配";
+          desc = `你选择了 ${names}。这套偏向干扰节奏，适合把对手拖进自己舒服的回合。`;
+        } else if (topRole === "defense" || topRole === "support") {
+          title = "稳健型搭配";
+          desc = `你选择了 ${names}。这套更耐打，适合新手慢慢观察对手技能。`;
+        }
+      }
+      if (selectedSkills.length === 3) {
+        desc += " 三个技能槽已满，可以去战斗区试一回合。";
+      }
+      document.querySelector("#build-title").textContent = title;
+      document.querySelector("#build-desc").textContent = desc;
+    }
+
+    document.querySelectorAll(".build-skill").forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.skill;
+        if (selectedSkills.includes(key)) {
+          selectedSkills = selectedSkills.filter((item) => item !== key);
+        } else if (selectedSkills.length < 3) {
+          selectedSkills.push(key);
+        } else {
+          document.querySelector("#build-title").textContent = "技能槽已满";
+          document.querySelector("#build-desc").textContent = "最多携带 3 个技能。先取消一个已选技能，再换新的搭配。";
+          return;
+        }
+        renderBuild();
+      });
+    });
+
+    document.querySelector("#clear-build").addEventListener("click", () => {
+      selectedSkills = [];
+      renderBuild();
+    });
+
+    renderBuild();
+
+    let enemyHp = 100;
+    let turnCount = 0;
+    let battleLocked = false;
+
+    function setBattleButtonsDisabled(disabled) {
+      document.querySelectorAll(".skill-btn").forEach((button) => {
+        button.disabled = disabled;
+      });
+    }
+
+    function resetBattle(message = "选择一个技能，体验一回合战斗反馈。") {
+      enemyHp = 100;
+      turnCount = 0;
+      battleLocked = false;
+      document.querySelector("#enemy-hp").style.width = "100%";
+      document.querySelector("#battle-log").textContent = message;
+      document.querySelector("#turn-counter").textContent = "回合 0 / 2";
+      document.querySelector("#challenge-result").textContent = "等待开始";
+      document.querySelector("#battle-challenge").classList.remove("win", "lose");
+      setBattleButtonsDisabled(false);
+    }
+
+    document.querySelectorAll(".element-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const data = elements[button.dataset.element];
+        document.querySelectorAll(".element-btn").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        document.querySelector("#strong-against").textContent = data.strong;
+        document.querySelector("#weak-against").textContent = data.weak;
+        setIcon("#hero-fighter", data.heroIcon, "icon-lg");
+        setIcon("#enemy-fighter", data.enemyIcon, "icon-lg");
+        resetBattle(`已切换为${data.hero}系宠物。选择技能开始战斗。`);
+      });
+    });
+
+    document.querySelectorAll(".skill-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (battleLocked) return;
+        const damage = Number(button.dataset.damage);
+        turnCount += 1;
+        enemyHp = Math.max(0, enemyHp - damage);
+        document.querySelector("#enemy-hp").style.width = `${enemyHp}%`;
+        document.querySelector("#turn-counter").textContent = `回合 ${turnCount} / 2`;
+        document.querySelector("#battle-log").textContent = enemyHp === 0 ? `${button.dataset.log} 对手被击败了！` : button.dataset.log;
+        const enemy = document.querySelector("#enemy-fighter");
+        enemy.style.transform = "translateX(8px) rotate(2deg)";
+        setTimeout(() => {
+          enemy.style.transform = "translateX(0) rotate(0)";
+        }, 170);
+        if (enemyHp === 0) {
+          battleLocked = true;
+          document.querySelector("#challenge-result").textContent = turnCount <= 2 ? "挑战成功" : "胜利";
+          document.querySelector("#battle-challenge").classList.add("win");
+          setBattleButtonsDisabled(true);
+        } else if (turnCount >= 2) {
+          battleLocked = true;
+          document.querySelector("#challenge-result").textContent = "挑战失败";
+          document.querySelector("#battle-log").textContent = `${button.dataset.log} 两回合结束，对手还站着。换个属性或技能试试。`;
+          document.querySelector("#battle-challenge").classList.add("lose");
+          setBattleButtonsDisabled(true);
+        }
+      });
+    });
+
+    document.querySelector("#reset-battle").addEventListener("click", () => {
+      resetBattle();
+    });
+
+    document.querySelectorAll(".memory-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const data = memories[button.dataset.memory];
+        document.querySelectorAll(".memory-btn").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        document.querySelector("#memory-title").textContent = data.title;
+        document.querySelector("#memory-desc").textContent = data.desc;
+      });
+    });
+
+    document.querySelectorAll(".quiz-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const data = quiz[button.dataset.quiz];
+        document.querySelectorAll(".quiz-btn").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        document.querySelector("#quiz-result").innerHTML = `<h3>${data.title}</h3><p>${data.desc}</p>`;
+      });
+    });
+
+    const navLinks = [...document.querySelectorAll(".nav-link")];
+    const sections = navLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`));
+      });
+    }, { rootMargin: "-42% 0px -48% 0px", threshold: 0.01 });
+    sections.forEach((section) => observer.observe(section));
+  </script>
+</body>
+</html>

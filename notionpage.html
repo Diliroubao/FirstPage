@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>一页读懂《洛克王国》</title>
+<style>
+  /* ============ 基础变量 ============ */
+  :root{
+    --paper:#F3E6C8;
+    --paper-dark:#EAD9B5;
+    --paper-deeper:#DCC79A;
+    --ink:#2B241A;
+    --ink-soft:#5B4A35;
+    --line:#B89B6A;
+    --line-soft:#C9B07F;
+    --teal:#2A8C8C;
+    --teal-dark:#1F6E6E;
+    --gold:#C89B2C;
+    --gold-soft:#E2B84A;
+    --shadow: 0 6px 18px rgba(80,55,20,.18);
+    --rail-max: 1240px;
+    --read-max: 820px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family: "Noto Serif SC","Songti SC","STSong","Source Han Serif SC",
+                 "PingFang SC","Microsoft YaHei",serif;
+    color:var(--ink);
+    line-height:1.8;
+    font-size:16px;
+    background:var(--paper);
+    overflow-x:hidden;
+  }
+
+  /* ============ 全宽地图背景 ============ */
+  .map-background{
+    position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(184,155,106,.18), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(184,155,106,.15), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(80,55,20,.15), transparent 55%),
+      linear-gradient(180deg, #F6EAD0 0%, #F1E2BF 50%, #EAD6AD 100%);
+  }
+  .map-background::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(184,155,106,.06) 0 1px, transparent 1px 14px),
+      repeating-linear-gradient(-45deg, rgba(184,155,106,.05) 0 1px, transparent 1px 14px);
+  }
+  .map-background::after{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at left, rgba(80,55,20,.18), transparent 40%),
+      radial-gradient(ellipse at right, rgba(80,55,20,.18), transparent 40%);
+    pointer-events:none;
+  }
+
+  /* 角落罗盘水印 */
+  .corner-compass{
+    position:fixed; right:24px; top:24px; z-index:-1;
+    font-size:120px; opacity:.07; transform:rotate(-12deg);
+    pointer-events:none;
+  }
+
+  /* ============ 内容带 ============ */
+  .content-rail{
+    position:relative;
+    max-width:var(--rail-max);
+    margin:0 auto;
+    padding:0 48px 80px;
+  }
+
+  /* ============ 卷轴顶部装饰 ============ */
+  .scroll-top{
+    height:48px;
+    background:linear-gradient(180deg,#8B6A3C,#6B4F2A);
+    border-bottom:4px solid #4A3618;
+    box-shadow: inset 0 -6px 12px rgba(0,0,0,.25), 0 4px 12px rgba(0,0,0,.2);
+    position:relative;
+  }
+  .scroll-top::before, .scroll-top::after{
+    content:""; position:absolute; top:50%; transform:translateY(-50%);
+    width:60px; height:60px; border-radius:50%;
+    background:radial-gradient(circle,#A6803F 30%,#5C4220 70%);
+    box-shadow:0 4px 10px rgba(0,0,0,.3);
+  }
+  .scroll-top::before{ left:24px; }
+  .scroll-top::after{ right:24px; }
+
+  /* ============ 路线主体 ============ */
+  .route-spine{
+    position:absolute;
+    left:32px; top:0; bottom:0;
+    width:2px;
+    border-left:2px dashed var(--line);
+    z-index:0;
+  }
+  @media (max-width: 900px){
+    .route-spine{ left:18px; }
+  }
+
+  /* ============ Section 通用 ============ */
+  section{
+    position:relative;
+    padding:80px 0 40px 64px;
+    z-index:1;
+  }
+  @media (max-width: 900px){
+    section{ padding-left:48px; }
+  }
+  .pin{
+    position:absolute; left:22px; top:96px;
+    width:22px; height:22px; border-radius:50%;
+    background:var(--gold); border:3px solid var(--ink);
+    box-shadow: 0 0 0 4px var(--paper), 0 4px 8px rgba(0,0,0,.25);
+    z-index:2;
+  }
+  @media (max-width: 900px){
+    .pin{ left:8px; width:18px; height:18px; }
+  }
+  .section-header{
+    margin-bottom:24px;
+  }
+  .section-eyebrow{
+    display:inline-block;
+    font-size:13px; letter-spacing:2px;
+    color:var(--ink-soft);
+    background:var(--paper-deeper);
+    padding:4px 12px; border-radius:2px;
+    border:1px solid var(--line-soft);
+  }
+  h1, h2, h3{ font-weight:800; color:var(--ink); margin:0; }
+  h1{ font-size:clamp(36px, 5vw, 64px); line-height:1.15; letter-spacing:2px; }
+  h2{ font-size:clamp(26px, 3vw, 36px); line-height:1.3; margin:8px 0 6px; }
+  h3{ font-size:18px; line-height:1.5; }
+  p{ margin:0 0 12px; }
+  .read-block{ max-width:var(--read-max); }
+
+  /* ============ Hero ============ */
+  .hero{
+    padding-top:60px;
+  }
+  .hero-layout{
+    display:grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media (max-width: 1000px){
+    .hero-layout{ grid-template-columns:1fr; }
+  }
+  .hero h1 .accent{ color:var(--teal); }
+  .hero-sub{
+    font-size:18px; color:var(--ink-soft);
+    max-width:560px; margin-top:16px;
+  }
+  .value-props{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    margin-top:28px;
+  }
+  @media (max-width:700px){ .value-props{ grid-template-columns:1fr; } }
+  .vp-card{
+    background:var(--paper-dark);
+    border:1px solid var(--line-soft);
+    border-radius:8px;
+    padding:14px 16px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  .vp-card .vp-icon{ font-size:22px; margin-bottom:6px; display:block; }
+  .vp-card h3{ font-size:15px; }
+  .vp-card p{ font-size:13px; color:var(--ink-soft); margin:4px 0 0; }
+
+  .hero-actions{
+    margin-top:28px; display:flex; gap:14px; flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-block; padding:12px 22px;
+    border-radius:6px; text-decoration:none; font-weight:700;
+    border:2px solid var(--ink);
+    box-shadow:0 3px 0 var(--ink), 0 6px 14px rgba(0,0,0,.18);
+    transition:transform .1s ease;
+    cursor:pointer; font-family:inherit; font-size:15px;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn-primary{ background:var(--teal); color:#fff; }
+  .btn-secondary{ background:var(--paper-dark); color:var(--ink); }
+
+  .map-frame{
+    position:relative;
+    background:var(--paper-dark);
+    border:2px solid var(--line);
+    border-radius:14px;
+    aspect-ratio: 4/3;
+    box-shadow:var(--shadow);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .map-frame::before{
+    content:""; position:absolute; inset:10px;
+    border:1px dashed var(--line); border-radius:10px;
+  }
+  .map-frame .map-emoji{
+    font-size:clamp(80px, 12vw, 160px);
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,.2));
+  }
+  .map-frame .map-pins{
+    position:absolute; inset:0;
+  }
+  .map-frame .map-pins span{
+    position:absolute; font-size:24px;
+  }
+  .map-frame .map-pins .p1{ top:18%; left:20%; }
+  .map-frame .map-pins .p2{ top:30%; right:18%; }
+  .map-frame .map-pins .p3{ bottom:22%; left:30%; }
+  .map-frame .map-pins .p4{ bottom:14%; right:24%; }
+
+  .scroll-hint{
+    text-align:center; margin-top:36px; color:var(--ink-soft);
+    font-size:14px; letter-spacing:2px;
+  }
+  .scroll-hint .arrow{ display:block; font-size:22px; margin-top:4px; animation:bounce 1.6s infinite; }
+  @keyframes bounce{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(6px);} }
+
+  /* ============ Passport / 概览 ============ */
+  .passport{
+    background:var(--paper-dark);
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:28px 32px;
+    box-shadow:var(--shadow);
+    position:relative;
+    display:grid; grid-template-columns:140px 1fr; gap:24px 32px;
+    max-width:1100px;
+  }
+  @media (max-width:700px){
+    .passport{ grid-template-columns:1fr; }
+  }
+  .passport .label{
+    font-weight:800; color:var(--teal-dark);
+    border-right:2px dashed var(--line);
+    padding-right:16px;
+  }
+  @media (max-width:700px){
+    .passport .label{ border-right:none; border-bottom:1px dashed var(--line); padding:0 0 4px; }
+  }
+  .passport .value{ color:var(--ink); }
+  .stamp{
+    position:absolute; top:-18px; right:24px;
+    width:90px; height:90px; border-radius:50%;
+    border:3px solid #B23A2A; color:#B23A2A;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-weight:900; font-size:13px; letter-spacing:1px;
+    transform:rotate(-12deg);
+    background:rgba(255,240,220,.7);
+    box-shadow:inset 0 0 0 2px rgba(178,58,42,.4);
+  }
+
+  /* ============ 玩法闭环 ============ */
+  .step-flow{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:16px;
+    margin-top:20px;
+  }
+  @media (max-width:1000px){ .step-flow{ grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .step-flow{ grid-template-columns:1fr;} }
+  .step-node{
+    background:var(--paper-dark);
+    border:1.5px solid var(--line-soft);
+    border-radius:10px;
+    padding:18px 16px;
+    text-align:center;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  .step-node .step-num{
+    width:36px; height:36px; border-radius:50%;
+    background:var(--teal); color:#fff; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 10px; border:2px solid var(--ink);
+  }
+  .step-node .step-icon{ font-size:28px; display:block; margin-bottom:6px; }
+  .step-node h3{ font-size:16px; }
+  .step-node p{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
+
+  /* ============ 公告牌 / 剧情 ============ */
+  .notice-board{
+    background:var(--paper-dark);
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:28px 32px;
+    position:relative;
+    box-shadow:var(--shadow);
+  }
+  .notice-board::before, .notice-board::after{
+    content:""; position:absolute; top:-10px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--ink); opacity:.7;
+  }
+  .notice-board::before{ left:24px; }
+  .notice-board::after{ right:24px; }
+  .icon-bullets{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:14px 24px;
+    margin-top:20px;
+  }
+  @media (max-width:700px){ .icon-bullets{ grid-template-columns:1fr; } }
+  .icon-bullet{
+    display:flex; gap:12px; align-items:flex-start;
+    background:var(--paper);
+    padding:12px 14px;
+    border-radius:8px;
+    border:1px dashed var(--line-soft);
+  }
+  .icon-bullet .ic{ font-size:22px; flex:0 0 auto; }
+  .icon-bullet h3{ font-size:15px; }
+  .icon-bullet p{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ============ 宠物伙伴 ============ */
+  .dex-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:18px;
+    max-width:1000px;
+  }
+  @media (max-width:700px){ .dex-grid{ grid-template-columns:1fr; } }
+  .dex-card{
+    background:var(--paper-dark);
+    border:1.5px solid var(--line-soft);
+    border-radius:10px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  .dex-card .pin-emoji{
+    position:absolute; top:-10px; left:14px;
+    font-size:22px;
+  }
+  .dex-card h3{ font-size:17px; margin-bottom:6px; color:var(--teal-dark); }
+  .dex-card p{ color:var(--ink-soft); font-size:14px; }
+
+  .pencil-note{
+    margin-top:20px; max-width:760px;
+    border-left:4px solid var(--gold);
+    background:rgba(226,184,74,.12);
+    padding:12px 16px; border-radius:0 8px 8px 0;
+    font-size:14px; color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  /* ============ 战斗对比 ============ */
+  .compare-row{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:20px;
+  }
+  @media (max-width:800px){ .compare-row{ grid-template-columns:1fr; } }
+  .poster{
+    border:2px solid var(--ink);
+    border-radius:10px;
+    padding:22px 24px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  .poster.pve{ background:#F1DCB0; }
+  .poster.pvp{ background:#E8E0CC; opacity:.92; }
+  .poster .tag{
+    display:inline-block; font-size:12px; letter-spacing:2px;
+    background:var(--ink); color:var(--paper);
+    padding:3px 10px; border-radius:3px; margin-bottom:10px;
+  }
+  .poster.pvp .tag{ background:var(--ink-soft); }
+  .poster h3{ font-size:20px; margin-bottom:8px; }
+  .poster p{ color:var(--ink-soft); font-size:14px; }
+  .poster .optional{
+    margin-top:10px; font-size:12px; color:var(--ink-soft);
+    border-top:1px dashed var(--line); padding-top:8px;
+  }
+
+  /* ============ 新手 5 步 / 路标 ============ */
+  .signpost-list{
+    display:grid; gap:14px; max-width:880px;
+  }
+  .signpost{
+    display:grid;
+    grid-template-columns:60px 1fr;
+    gap:18px;
+    background:var(--paper-dark);
+    border:1.5px solid var(--line-soft);
+    border-left:6px solid var(--teal);
+    padding:14px 18px;
+    border-radius:8px;
+    box-shadow:var(--shadow);
+    align-items:center;
+  }
+  .signpost .num{
+    width:46px; height:46px; border-radius:50%;
+    background:var(--gold); color:var(--ink);
+    font-weight:900; font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--ink);
+  }
+  .signpost h3{ font-size:16px; }
+  .signpost p{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ============ FAQ ============ */
+  .faq-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:14px 22px;
+  }
+  @media (max-width:800px){ .faq-grid{ grid-template-columns:1fr; } }
+  .faq-slip{
+    background:var(--paper-dark);
+    border:1.5px solid var(--line-soft);
+    border-radius:8px;
+    padding:14px 18px;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+  }
+  .faq-slip summary{
+    list-style:none;
+    font-weight:700;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:12px;
+    color:var(--ink);
+  }
+  .faq-slip summary::-webkit-details-marker{ display:none; }
+  .faq-slip summary::after{
+    content:"+";
+    font-size:22px; color:var(--teal); font-weight:800;
+    transition:transform .2s;
+  }
+  .faq-slip[open] summary::after{ content:"−"; }
+  .faq-slip p{
+    color:var(--ink-soft); font-size:14px; margin-top:10px;
+  }
+
+  /* ============ Footer 印章 ============ */
+  .final-stamp{
+    text-align:center;
+    padding:60px 0 30px;
+  }
+  .emblem{
+    display:inline-block;
+    width:160px; height:160px; border-radius:50%;
+    border:5px double #B23A2A; color:#B23A2A;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:14px; letter-spacing:2px;
+    text-align:center; padding:14px;
+    transform:rotate(-6deg);
+    background:rgba(255,240,220,.6);
+    margin:0 auto 24px;
+    line-height:1.4;
+  }
+  .final-line{
+    max-width:720px; margin:0 auto;
+    font-size:18px; color:var(--ink-soft);
+  }
+  .copyright{
+    margin-top:30px; font-size:12px; color:var(--ink-soft); opacity:.7;
+  }
+
+  /* ============ 返回顶部指南针 ============ */
+  .compass-btn{
+    position:fixed; right:24px; bottom:24px;
+    width:54px; height:54px; border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--ink);
+    color:var(--ink);
+    cursor:pointer; font-size:22px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+    opacity:0; pointer-events:none; transition:opacity .3s;
+    z-index:50;
+  }
+  .compass-btn.show{ opacity:1; pointer-events:auto; }
+  .compass-btn:hover{ background:var(--paper-dark); }
+
+  /* 卷轴折痕分隔（可选） */
+  .crease{
+    height:24px;
+    background:repeating-linear-gradient(90deg,
+      transparent 0 30px, rgba(80,55,20,.12) 30px 31px);
+    opacity:.5;
+    margin:24px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="map-background"></div>
+<div class="corner-compass">🧭</div>
+
+<div class="scroll-top"></div>
+
+<main class="content-rail">
+  <div class="route-spine"></div>
+
+  <!-- A. Hero -->
+  <section class="hero" id="top">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">🧭 王国地图 · 封面</span>
+    </div>
+    <div class="hero-layout">
+      <div>
+        <h1>一页读懂<br><span class="accent">《洛克王国》</span></h1>
+        <p class="hero-sub">从踏入王国的第一步开始——探索地图、结识宠物伙伴、把故事一路玩下去。</p>
+
+        <div class="value-props">
+          <div class="vp-card">
+            <span class="vp-icon">📜</span>
+            <h3>剧情驱动探索</h3>
+            <p>跟着任务走,地图越开越大</p>
+          </div>
+          <div class="vp-card">
+            <span class="vp-icon">🐾</span>
+            <h3>宠物伙伴同行</h3>
+            <p>遇见、收集、培养主力小队</p>
+          </div>
+          <div class="vp-card">
+            <span class="vp-icon">✨</span>
+            <h3>轻松冒险节奏</h3>
+            <p>打怪解谜领奖励,玩起来不费劲</p>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#getting-started">从新手 5 步开始</a>
+          <a class="btn btn-secondary" href="#core-loop">这游戏到底在玩什么</a>
+        </div>
+      </div>
+
+      <div class="map-frame">
+        <div class="map-emoji">🏰</div>
+        <div class="map-pins">
+          <span class="p1">🌲</span>
+          <span class="p2">⛰️</span>
+          <span class="p3">🏕️</span>
+          <span class="p4">🎁</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      向下滚动,开始旅程
+      <span class="arrow">▼</span>
+    </div>
+  </section>
+
+  <div class="crease"></div>
+
+  <!-- B. 30秒概览 -->
+  <section id="overview">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">🪪 旅行者证件 · 概览</span>
+      <h2>30 秒看懂:它到底是什么游戏?</h2>
+    </div>
+
+    <div class="passport">
+      <div class="stamp">已盖章<br>NEW PLAYER</div>
+      <div class="label">一句话</div>
+      <div class="value">一款以「冒险剧情 + 宠物伙伴 + 回合战斗」为核心的奇幻王国游戏。</div>
+
+      <div class="label">你会做的事</div>
+      <div class="value">跑地图 → 接任务 → 遇见宠物 → 组队打挑战 → 拿奖励继续探索。</div>
+
+      <div class="label">适合谁</div>
+      <div class="value">想轻松看剧情、喜欢探索地图、也愿意慢慢养成队伍的新玩家。</div>
+
+      <div class="label">核心循环</div>
+      <div class="value">探索 → 捕捉 → 培养 → 挑战 → 获得资源 → 回到探索。</div>
+    </div>
+  </section>
+
+  <!-- C. 玩法闭环 -->
+  <section id="core-loop">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">🗺️ 路线总览 · 玩法闭环</span>
+      <h2>洛克王国怎么玩?记住这 5 步就够了</h2>
+      <p class="read-block" style="color:var(--ink-soft)">
+        你不需要一开始就研究很深,先把主线推起来,很多系统会「边玩边懂」。
+      </p>
+    </div>
+
+    <div class="step-flow">
+      <div class="step-node">
+        <div class="step-num">1</div>
+        <span class="step-icon">📖</span>
+        <h3>走剧情</h3>
+        <p>跟着主线认识世界与角色</p>
+      </div>
+      <div class="step-node">
+        <div class="step-num">2</div>
+        <span class="step-icon">🗺️</span>
+        <h3>开地图</h3>
+        <p>解锁新场景与新事件</p>
+      </div>
+      <div class="step-node">
+        <div class="step-num">3</div>
+        <span class="step-icon">🐣</span>
+        <h3>遇宠收集</h3>
+        <p>路上碰到各种宠物伙伴</p>
+      </div>
+      <div class="step-node">
+        <div class="step-num">4</div>
+        <span class="step-icon">⚔️</span>
+        <h3>养成变强</h3>
+        <p>升级、配技能,让队伍更顺手</p>
+      </div>
+      <div class="step-node">
+        <div class="step-num">5</div>
+        <span class="step-icon">🏆</span>
+        <h3>挑战推进</h3>
+        <p>过关拿资源,继续探索</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="crease"></div>
+
+  <!-- D. 剧情探索 -->
+  <section id="story">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">📜 主线公告牌 · 剧情探索</span>
+      <h2>最推荐的打开方式:把它当一段「王国冒险故事」来玩</h2>
+    </div>
+
+    <div class="notice-board">
+      <div class="read-block">
+        <p>你会从新手区域出发,跟着任务认识王国的地点与人物。随着推进,地图会一点点打开:新的城镇、野外、秘境、活动区域都会出现。</p>
+        <p>探索的过程中,你会遇到各种事件:有的是战斗,有的是小解谜,有的是收集与互动。你每完成一步,都会更像「真的在王国里旅行」。</p>
+      </div>
+
+      <div class="icon-bullets">
+        <div class="icon-bullet">
+          <span class="ic">📌</span>
+          <div><h3>主线 / 支线任务</h3><p>故事推进的主动力</p></div>
+        </div>
+        <div class="icon-bullet">
+          <span class="ic">🔍</span>
+          <div><h3>场景互动</h3><p>隐藏点、NPC 对话、小机关</p></div>
+        </div>
+        <div class="icon-bullet">
+          <span class="ic">🌱</span>
+          <div><h3>旅行式成长</h3><p>越走越远,越玩越熟</p></div>
+        </div>
+        <div class="icon-bullet">
+          <span class="ic">🎉</span>
+          <div><h3>活动剧情</h3><p>限时内容常带主题玩法</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- E. 宠物伙伴 -->
+  <section id="companions">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">🐾 伙伴图鉴 · 宠物系统</span>
+      <h2>宠物不是「工具」,更像你的冒险队友</h2>
+      <p class="read-block" style="color:var(--ink-soft)">
+        你会不断遇见新伙伴,把喜欢的那几只慢慢练成「主力小队」。
+      </p>
+    </div>
+
+    <div class="dex-grid">
+      <div class="dex-card">
+        <span class="pin-emoji">📍</span>
+        <h3>遇见与收集</h3>
+        <p>探索途中会遇到不同宠物,有些来自任务与活动。</p>
+      </div>
+      <div class="dex-card">
+        <span class="pin-emoji">📍</span>
+        <h3>培养成长</h3>
+        <p>升级、强化、技能搭配,让它们更能打。</p>
+      </div>
+      <div class="dex-card">
+        <span class="pin-emoji">📍</span>
+        <h3>属性小克制</h3>
+        <p>打不过时,换个属性或换个队友通常更有效。</p>
+      </div>
+      <div class="dex-card">
+        <span class="pin-emoji">📍</span>
+        <h3>队伍搭配</h3>
+        <p>不用一步到位,先让队伍「能推剧情」最重要。</p>
+      </div>
+    </div>
+
+    <div class="pencil-note">
+      ✏️ 新手提示:先专心养 <b>1–2 只顺手的主力</b>,体验会舒服很多。
+    </div>
+  </section>
+
+  <div class="crease"></div>
+
+  <!-- F. 战斗 -->
+  <section id="battle">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">⚔️ 关卡说明牌 · 战斗体验</span>
+      <h2>战斗不复杂:更像冒险路上的「小关卡」</h2>
+      <p class="read-block" style="color:var(--ink-soft)">
+        多数时候战斗是为了推进任务与解锁区域。慢慢你就会知道:什么时候该强化、什么时候换队友、什么时候去做日常。
+      </p>
+    </div>
+
+    <div class="compare-row">
+      <div class="poster pve">
+        <span class="tag">PVE · 主线推进</span>
+        <h3>打剧情 / 打首领</h3>
+        <p>更像解题——找到合适的属性与节奏,就会轻松很多。卡关时多半不是数值不够,而是搭配可以再调一调。</p>
+      </div>
+      <div class="poster pvp">
+        <span class="tag">PVP · 可选玩法</span>
+        <h3>对战竞技</h3>
+        <p>喜欢策略对抗再深入即可。</p>
+        <p class="optional">★ 不喜欢竞技完全没问题,不影响你把剧情探索体验完整。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- G. 新手 5 步 -->
+  <section id="getting-started">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">🪧 营地路标 · 新手上手</span>
+      <h2>新玩家从这里开始(照做就能玩起来)</h2>
+    </div>
+
+    <div class="signpost-list">
+      <div class="signpost">
+        <div class="num">1</div>
+        <div><h3>先推主线</h3><p>别急着收集全图鉴,跟着剧情走会自然解锁玩法。</p></div>
+      </div>
+      <div class="signpost">
+        <div class="num">2</div>
+        <div><h3>抓到喜欢的就先用</h3><p>审美优先,练自己看着顺眼的伙伴,体验更好。</p></div>
+      </div>
+      <div class="signpost">
+        <div class="num">3</div>
+        <div><h3>卡关先换思路</h3><p>换属性、换队友、回去练几级,通常就能过。</p></div>
+      </div>
+      <div class="signpost">
+        <div class="num">4</div>
+        <div><h3>每天做一点日常</h3><p>资源稳定,养成会更顺,不需要肝。</p></div>
+      </div>
+      <div class="signpost">
+        <div class="num">5</div>
+        <div><h3>再慢慢扩队</h3><p>补齐「能打能扛能续航」的基本需求。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="crease"></div>
+
+  <!-- H. FAQ -->
+  <section id="faq">
+    <span class="pin"></span>
+    <div class="section-header">
+      <span class="section-eyebrow">🍻 酒馆传闻 · 旅人问答</span>
+      <h2>新玩家最常问的几个问题</h2>
+    </div>
+
+    <div class="faq-grid">
+      <details class="faq-slip">
+        <summary>我需要很肝吗?</summary>
+        <p>不需要。先按主线走就能玩得很顺;想更快变强再做日常就行。</p>
+      </details>
+      <details class="faq-slip">
+        <summary>不懂配招/属性会不会玩不下去?</summary>
+        <p>入门不会卡死。卡关时系统会逼你「学一点点」,但通常换队友或练练级就能过。</p>
+      </details>
+      <details class="faq-slip">
+        <summary>我只想看剧情探索,不想竞技可以吗?</summary>
+        <p>完全可以。对战玩法是可选项,不影响你把冒险故事体验完整。</p>
+      </details>
+      <details class="faq-slip">
+        <summary>要不要一开始就追强宠?</summary>
+        <p>不用。先把主线推进、资源跑通,再决定要不要追活动与强度更划算。</p>
+      </details>
+      <details class="faq-slip">
+        <summary>适合小朋友玩吗?</summary>
+        <p>整体偏轻松向。建议家长引导一下时间管理与消费习惯,体验会更安心。</p>
+      </details>
+      <details class="faq-slip">
+        <summary>玩到哪里算「入门成功」?</summary>
+        <p>当你有 1–2 只顺手主力、会换属性应对卡关、知道每天做哪些日常时,就已经入门了。</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- I. Footer -->
+  <footer class="final-stamp" id="end">
+    <span class="pin"></span>
+    <div class="emblem">抵 达 终 点<br>· KINGDOM ·<br>OF&nbsp;ROCO</div>
+    <p class="final-line">
+      走进王国、把地图点亮、和宠物伙伴一起把故事玩下去——这就是《洛克王国》最舒服的打开方式。
+    </p>
+    <p class="copyright">本页为「一页读懂」内容介绍,仅作新手安利与玩法概述用途。</p>
+  </footer>
+</main>
+
+<button class="compass-btn" id="backToTop" aria-label="返回顶部">🧭</button>
+
+<script>
+  // 返回顶部按钮显示/隐藏
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 600) btn.classList.add('show');
+    else btn.classList.remove('show');
+  });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 平滑滚动锚点
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

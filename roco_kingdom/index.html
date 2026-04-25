@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一页读懂洛克王国 - 见习魔法师指南</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 魔法轨迹 -->
+    <div id="magic-cursor"></div>
+
+    <!-- 首屏区块 (Hero Section) -->
+    <section class="hero">
+        <div class="parallax-bg" id="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="main-title">一页读懂<span>洛克王国</span></h1>
+            <p class="subtitle">在卡洛西亚大陆，开启你的见习魔法师之旅！</p>
+            <div class="cta-button" onclick="scrollToSection('worldview')">
+                <span>滚动探索魔法奥秘</span>
+                <div class="glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 世界观区块 (Worldview) -->
+    <section id="worldview" class="section worldview">
+        <h2 class="section-title">✨ 亚瑟纪元与魔法文明</h2>
+        <div class="scroll-reveal-container">
+            <div class="parchment reveal-item">
+                <h3>卡洛西亚大陆</h3>
+                <p>故事发生在一片名为“卡洛西亚”的广袤大陆上，洛克王国坐落于其东端的滨海盆地。</p>
+            </div>
+            <div class="parchment reveal-item delay-1">
+                <h3>魔法与文明</h3>
+                <p>洛克族发展出基于自然律动的精灵沟通术与魔法体系，这些技术广泛应用于城邦建设、资源调度及边境防御中。</p>
+            </div>
+            <div class="parchment reveal-item delay-2">
+                <h3>古老传说</h3>
+                <p>远古时期曾爆发“噩梦”危机，传奇英雄亚瑟王联合各族封印了噩梦，奠定了王国的根基并开启了“亚瑟纪元”。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 经典精灵区块 (Elves & 3D Flip) -->
+    <section class="section elves">
+        <h2 class="section-title">🐾 洛克族的共生伙伴</h2>
+        <p class="section-desc">结识经典“御三家”，鼠标悬停查看进化链！</p>
+        
+        <div class="card-container">
+            <!-- 喵喵 (草) -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front grass-bg">
+                        <img src="assets/roco_elf_grass_1777083609371.png" alt="喵喵">
+                        <h3>喵喵</h3>
+                        <span class="badge badge-grass">草属性</span>
+                    </div>
+                    <div class="flip-card-back grass-bg-dark">
+                        <h3>进化链</h3>
+                        <p>喵喵 ➔ 魔力猫 ➔ 武斗酷猫</p>
+                        <hr>
+                        <p><strong>专属技能：</strong> 寄生种子、阳光烈焰</p>
+                        <p class="desc">充满生机的小猫，能够操控植物的力量。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 火花 (火) -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front fire-bg">
+                        <img src="assets/roco_elf_fire_1777083577920.png" alt="火花">
+                        <h3>火花</h3>
+                        <span class="badge badge-fire">火属性</span>
+                    </div>
+                    <div class="flip-card-back fire-bg-dark">
+                        <h3>进化链</h3>
+                        <p>火花 ➔ 焰火 ➔ 火神</p>
+                        <hr>
+                        <p><strong>专属技能：</strong> 龙之爪牙、暴击枪</p>
+                        <p class="desc">尾巴上燃烧着不灭的火焰，热情而勇敢。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 水蓝蓝 (水) -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front water-bg">
+                        <img src="assets/roco_elf_water_1777083595228.png" alt="水蓝蓝">
+                        <h3>水蓝蓝</h3>
+                        <span class="badge badge-water">水属性</span>
+                    </div>
+                    <div class="flip-card-back water-bg-dark">
+                        <h3>进化链</h3>
+                        <p>水蓝蓝 ➔ 波波拉 ➔ 水灵</p>
+                        <hr>
+                        <p><strong>专属技能：</strong> 泡沫力量、水之波纹</p>
+                        <p class="desc">温柔的水之精灵，像果冻一样柔软。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色玩法 & 互动 (Gameplay & Interaction) -->
+    <section class="section gameplay">
+        <h2 class="section-title">⚔️ 策略与探索</h2>
+        
+        <div class="interactive-grid">
+            <!-- 属性克制轮盘 -->
+            <div class="interactive-box">
+                <h3>🔄 属性克制直观图</h3>
+                <p>鼠标悬停在属性上，查看克制关系！</p>
+                <div class="element-wheel" id="element-wheel">
+                    <div class="element-node fire" data-type="fire" data-counters="grass" data-weak="water">火</div>
+                    <div class="element-node water" data-type="water" data-counters="fire" data-weak="grass">水</div>
+                    <div class="element-node grass" data-type="grass" data-counters="water" data-weak="fire">草</div>
+                    <div class="wheel-center">相生相克</div>
+                </div>
+                <div id="element-feedback" class="feedback-text">悬停以查看关系</div>
+            </div>
+
+            <!-- 咕噜球捕捉模拟 -->
+            <div class="interactive-box catch-game">
+                <h3>🎾 捕捉模拟器</h3>
+                <p>点击咕噜球，看看草丛里藏着什么精灵？</p>
+                <div class="grass-patch" id="grass-patch">
+                    🌿 草丛在晃动...
+                </div>
+                <div class="gulu-ball" id="gulu-ball" onclick="throwBall()"></div>
+                <div id="catch-result" class="catch-result"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 (Footer) -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h2>魔法永不落幕，你的洛克篇章才刚刚开始。</h2>
+            <button class="join-btn" onclick="alert('恭喜你，见习魔法师！长袍已发放。')">一键领取见习法师长袍</button>
+        </div>
+        <div class="stars-footer"></div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
